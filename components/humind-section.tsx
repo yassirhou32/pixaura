@@ -113,13 +113,6 @@ export function HumindSection() {
         <div className="absolute top-3/4 left-0 w-full h-px bg-gradient-to-r from-transparent via-purple-500/20 to-transparent" />
       </div>
 
-      {/* Logo "N" in bottom-left corner */}
-      <div className="absolute bottom-6 left-6 z-10">
-        <div className="text-white text-4xl font-black" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-          N
-        </div>
-      </div>
-
       <div className="relative z-10 max-w-6xl mx-auto w-full">
         {/* Section Indicator - Top of Card - Ultra Premium Decorated */}
         <div className="absolute -top-16 left-1/2 transform -translate-x-1/2 z-20">
