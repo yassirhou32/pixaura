@@ -135,6 +135,10 @@
   }
 }
 
+.animate-fadeIn {
+  animation: fadeIn 0.5s ease-in-out;
+}
+
 @keyframes slideUp {
   from {
     opacity: 0;
@@ -372,6 +376,19 @@ html {
 }
 
 /* Apple-style smooth scroll animations */
+@keyframes scrollSlow {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll-slow {
+  animation: scrollSlow 30s linear infinite;
+}
+
 @keyframes scrollFadeIn {
   from {
     opacity: 0;
@@ -773,4 +790,15 @@ html {
   75% {
     transform: scale(1.15) rotate(5deg);
   }
+}
+
+/* Select dropdown styles */
+select option {
+  background-color: #1a1a1a !important;
+  color: #ffffff !important;
+}
+
+select:focus option:checked {
+  background-color: #22d3ee !important;
+  color: #000000 !important;
 }

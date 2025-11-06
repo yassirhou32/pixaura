@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useMemo } from "react"
 import Image from "next/image"
 import Link from "next/link"
 import { ProjectModal } from "@/components/project-modal"
+import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { Palette, Car, Building2, Dumbbell, UtensilsCrossed, Briefcase, Users } from "lucide-react"
 
@@ -279,7 +280,8 @@ export default function RealisationsPage() {
 
   return (
     <main className="bg-black min-h-screen">
-      <section ref={sectionRef} className="relative py-20 px-6 bg-black overflow-hidden">
+      <Navbar />
+      <section ref={sectionRef} className="relative pt-40 pb-20 px-6 bg-black overflow-hidden">
         {/* Section Separator - Top */}
         <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
         

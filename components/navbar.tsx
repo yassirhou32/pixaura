@@ -31,9 +31,9 @@ export function Navbar() {
     { label: "Services", href: "#services" },
     { label: "Réalisations", href: "/realisations" },
     { label: "Offre", href: "/offre" },
-    { label: "Agence", href: "#about" },
+    { label: "Agence", href: "/agence" },
     { label: "Ressources", href: "#humind" },
-    { label: "Contact", href: "#contact" },
+    { label: "Contact", href: "/contact" },
   ]
 
   return (

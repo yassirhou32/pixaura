@@ -54,12 +54,6 @@ export function PricingSection() {
               />
             ))}
             
-            {/* Corner Glow Effects */}
-            <div className="absolute top-0 left-0 w-40 h-40 bg-gradient-to-br from-cyan-400/20 to-transparent rounded-tl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700 blur-2xl" />
-            <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-bl from-purple-500/20 to-transparent rounded-tr-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700 blur-2xl" />
-            <div className="absolute bottom-0 left-0 w-40 h-40 bg-gradient-to-tr from-cyan-400/20 to-transparent rounded-bl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700 blur-2xl" />
-            <div className="absolute bottom-0 right-0 w-40 h-40 bg-gradient-to-tl from-purple-500/20 to-transparent rounded-br-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700 blur-2xl" />
-            
             <div className="relative z-10">
               {/* Title - Ultra Premium */}
               <div className="relative mb-8">
@@ -106,20 +100,10 @@ export function PricingSection() {
                   <span className="relative z-10">Découvrir nos offres</span>
                   <ArrowRight className="w-6 h-6 relative z-10 group-hover/button:translate-x-2 transition-transform duration-500" />
                   
-                  {/* Corner Accents */}
-                  <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white/40 rounded-tl-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-white/40 rounded-tr-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-white/40 rounded-bl-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                  <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white/40 rounded-br-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
                 </Link>
               </div>
             </div>
             
-            {/* Corner Accents - Main Container */}
-            <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-cyan-400/40 rounded-tl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-            <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-purple-500/40 rounded-tr-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
-            <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-cyan-400/40 rounded-bl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-            <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-purple-500/40 rounded-br-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
           </div>
         </div>
       </div>

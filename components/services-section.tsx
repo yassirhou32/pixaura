@@ -216,17 +216,6 @@ export function ServicesSection() {
                 <div className="absolute inset-0 rounded-[2rem] border-2 border-cyan-400/40 animate-spin-slow" style={{ animation: "borderRotate 3s linear infinite" }} />
               </div>
               
-              {/* Premium corner decorative elements - Enhanced */}
-              <div className="absolute top-0 left-0 w-8 h-8 border-t-[3px] border-l-[3px] border-white/15 group-hover:border-cyan-400/80 rounded-tl-[2rem] transition-all duration-700 shadow-xl shadow-cyan-400/40 group-hover:shadow-cyan-400/60" />
-              <div className="absolute top-0 right-0 w-8 h-8 border-t-[3px] border-r-[3px] border-white/15 group-hover:border-cyan-400/80 rounded-tr-[2rem] transition-all duration-700 shadow-xl shadow-cyan-400/40 group-hover:shadow-cyan-400/60" />
-              <div className="absolute bottom-0 left-0 w-8 h-8 border-b-[3px] border-l-[3px] border-white/15 group-hover:border-cyan-400/80 rounded-bl-[2rem] transition-all duration-700 shadow-xl shadow-cyan-400/40 group-hover:shadow-cyan-400/60" />
-              <div className="absolute bottom-0 right-0 w-8 h-8 border-b-[3px] border-r-[3px] border-white/15 group-hover:border-cyan-400/80 rounded-br-[2rem] transition-all duration-700 shadow-xl shadow-cyan-400/40 group-hover:shadow-cyan-400/60" />
-              
-              {/* Inner decorative corner accents */}
-              <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-white/8 group-hover:border-cyan-400/50 rounded-tl-xl transition-all duration-700" />
-              <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-white/8 group-hover:border-cyan-400/50 rounded-tr-xl transition-all duration-700" />
-              <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-white/8 group-hover:border-cyan-400/50 rounded-bl-xl transition-all duration-700" />
-              <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-white/8 group-hover:border-cyan-400/50 rounded-br-xl transition-all duration-700" />
               
               {/* Decorative border lines - Subtle */}
               <div className="absolute top-0 left-8 right-8 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />

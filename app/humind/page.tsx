@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from "react"
 import Link from "next/link"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
 import { Play, Clock, ArrowRight } from "lucide-react"
 
 // Structure de données pour les épisodes
@@ -117,6 +119,8 @@ export default function HumindPage() {
 
   return (
     <main ref={sectionRef} className="relative bg-black min-h-screen overflow-hidden">
+      <Navbar />
+      <div className="pt-20">
       {/* Enhanced Background - Deep dark with animated gradients */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950/50 to-black" />
       
@@ -634,6 +638,8 @@ export default function HumindPage() {
           </div>
         </section>
       </div>
+      </div>
+      <Footer />
     </main>
   )
 }

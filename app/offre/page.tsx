@@ -1,7 +1,10 @@
 "use client"
 
 import { useState, useEffect, useRef } from "react"
+import Link from "next/link"
 import Image from "next/image"
+import { Navbar } from "@/components/navbar"
+import { Footer } from "@/components/footer"
 import { Factory, Sparkles, BarChart3, Check, Calendar, FileText, ChevronDown, X } from "lucide-react"
 import * as Dialog from "@radix-ui/react-dialog"
 
@@ -64,6 +67,8 @@ export default function OffrePage() {
 
   return (
     <main ref={sectionRef} className="relative bg-black min-h-screen overflow-hidden">
+      <Navbar />
+      <div className="pt-20">
       {/* Enhanced Background - Deep dark with animated gradients */}
       <div className="absolute inset-0 bg-gradient-to-b from-black via-slate-950/50 to-black" />
       
@@ -1225,80 +1230,120 @@ export default function OffrePage() {
           </div>
         </div>
 
-        {/* Bloc comparaison (tableau) - Enhanced */}
-        <section className="relative py-20 px-6">
+        {/* Bloc comparaison (tableau) - Ultra Premium Enhanced */}
+        <section className="relative py-24 px-6">
           <div className="max-w-7xl mx-auto">
-            <h2 className="text-4xl md:text-5xl font-black text-white text-center mb-12 relative" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '-0.03em' }}>
-              <span className="relative z-10">Comparaison des Packs</span>
-              <span className="absolute inset-0 bg-gradient-to-r from-white via-white/80 to-white bg-clip-text text-transparent blur-2xl opacity-30 animate-pulse" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+            {/* Title with Enhanced Glow */}
+            <div className="relative mb-16 text-center">
+              <h2 className="text-5xl md:text-6xl lg:text-7xl font-black text-white relative z-10 mb-4" style={{ 
+                fontFamily: 'Montserrat, sans-serif', 
+                letterSpacing: '-0.03em',
+                textShadow: '0 0 40px rgba(255, 255, 255, 0.3), 0 0 80px rgba(0, 212, 255, 0.2)',
+              }}>
                 Comparaison des Packs
-              </span>
-            </h2>
+              </h2>
+              <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 w-48 h-1 bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 rounded-full opacity-60" style={{ animation: 'pack-glow-pulse 3s ease-in-out infinite' }} />
+            </div>
             
             <div className="overflow-x-auto">
-              <div className="relative bg-black/70 backdrop-blur-2xl rounded-2xl border-2 border-white/10 p-8 shadow-2xl shadow-black/50">
-                <table className="w-full text-left">
-                  <thead>
-                    <tr className="border-b-2 border-white/20">
-                      <th className="pb-6 text-white font-black text-sm uppercase tracking-wider" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Caractéristiques
-                      </th>
-                      <th className="pb-6 text-cyan-400 font-black text-sm uppercase tracking-wider text-center" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Starter
-                      </th>
-                      <th className="pb-6 text-purple-400 font-black text-sm uppercase tracking-wider text-center" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Croissance
-                      </th>
-                      <th className="pb-6 text-cyan-400 font-black text-sm uppercase tracking-wider text-center" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Signature
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="text-gray-300 text-sm" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Shootings / mois</td>
-                      <td className="py-5 text-center">1 initial</td>
-                      <td className="py-5 text-center">2 / trimestre</td>
-                      <td className="py-5 text-center">Sur mesure</td>
-                    </tr>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Gestion réseaux</td>
-                      <td className="py-5 text-center">1 réseau</td>
-                      <td className="py-5 text-center">Multi-plateformes</td>
-                      <td className="py-5 text-center">Cross-plateformes</td>
-                    </tr>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Ads incluses</td>
-                      <td className="py-5 text-center">-</td>
-                      <td className="py-5 text-center">Oui</td>
-                      <td className="py-5 text-center">Oui</td>
-                    </tr>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Direction artistique</td>
-                      <td className="py-5 text-center">-</td>
-                      <td className="py-5 text-center">Optimisation</td>
-                      <td className="py-5 text-center">Complète</td>
-                    </tr>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Suivi & reporting</td>
-                      <td className="py-5 text-center">Mensuel</td>
-                      <td className="py-5 text-center">Bi-mensuel</td>
-                      <td className="py-5 text-center">Avancé</td>
-                    </tr>
-                    <tr className="border-b border-white/10 hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Prix indicatif</td>
-                      <td className="py-5 text-center text-cyan-400 font-bold">5 999 € TTC/an</td>
-                      <td className="py-5 text-center text-purple-400 font-bold">À partir de 9 000 € HT/an</td>
-                      <td className="py-5 text-center text-cyan-400 font-bold">&gt; 15 000 € HT/an</td>
-                    </tr>
-                    <tr className="hover:bg-white/5 transition-colors duration-300">
-                      <td className="py-5 font-semibold">Délais moyens</td>
-                      <td className="py-5 text-center">2 semaines</td>
-                      <td className="py-5 text-center">2-3 semaines</td>
-                      <td className="py-5 text-center">3-4 semaines</td>
-                    </tr>
-                  </tbody>
-                </table>
+              <div className="relative group/table">
+                {/* Multi-Layer Glow Effects */}
+                <div className="absolute -inset-4 bg-gradient-to-r from-cyan-400/20 via-purple-500/20 to-cyan-400/20 rounded-3xl blur-3xl opacity-40 group-hover/table:opacity-70 transition-opacity duration-1000" style={{ animation: 'pack-glow-pulse 4s ease-in-out infinite' }} />
+                <div className="absolute -inset-2 bg-gradient-to-r from-white/10 via-white/15 to-white/10 rounded-2xl blur-2xl opacity-30 group-hover/table:opacity-50 transition-opacity duration-1000" />
+                
+                {/* Light Sweep Effect */}
+                <div className="absolute inset-0 rounded-3xl opacity-0 group-hover/table:opacity-100 transition-opacity duration-700 overflow-hidden pointer-events-none">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent" style={{ 
+                    animation: 'light-sweep-premium 3s ease-in-out infinite',
+                  }} />
+                </div>
+                
+                {/* Main Table Container */}
+                <div className="relative bg-black/80 backdrop-blur-3xl rounded-3xl border-2 border-white/20 p-8 md:p-12 shadow-2xl shadow-black/70 group-hover/table:border-cyan-400/40 group-hover/table:shadow-cyan-400/20 group-hover/table:shadow-purple-500/20 transition-all duration-700">
+                  {/* Animated Background Gradient */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/5 via-purple-500/5 to-cyan-400/3 rounded-3xl opacity-0 group-hover/table:opacity-100 transition-opacity duration-700" style={{
+                    backgroundSize: '200% 200%',
+                    animation: 'gradientShiftAdvanced 6s ease infinite',
+                  }} />
+                  
+                  <div className="relative z-10">
+                    <table className="w-full text-left">
+                      <thead>
+                        <tr className="border-b-2 border-white/30">
+                          <th className="pb-6 pt-2 text-white font-black text-sm uppercase tracking-wider" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.1em' }}>
+                            Caractéristiques
+                          </th>
+                          <th className="pb-6 pt-2 text-cyan-400 font-black text-base uppercase tracking-wider text-center relative" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.1em' }}>
+                            <span className="relative z-10">Starter</span>
+                            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-cyan-400/50 rounded-full opacity-60" style={{ animation: 'pack-glow-pulse 2s ease-in-out infinite' }} />
+                          </th>
+                          <th className="pb-6 pt-2 text-purple-400 font-black text-base uppercase tracking-wider text-center relative" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.1em' }}>
+                            <span className="relative z-10">Croissance</span>
+                            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-purple-500 to-purple-500/50 rounded-full opacity-60" style={{ animation: 'pack-glow-pulse 2s ease-in-out infinite' }} />
+                          </th>
+                          <th className="pb-6 pt-2 text-cyan-400 font-black text-base uppercase tracking-wider text-center relative" style={{ fontFamily: 'Montserrat, sans-serif', letterSpacing: '0.1em' }}>
+                            <span className="relative z-10">Signature</span>
+                            <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-16 h-1 bg-gradient-to-r from-cyan-400 to-cyan-400/50 rounded-full opacity-60" style={{ animation: 'pack-glow-pulse 2s ease-in-out infinite' }} />
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody className="text-gray-200 text-sm md:text-base" style={{ fontFamily: 'Montserrat, sans-serif' }}>
+                        <tr className="border-b border-white/15 hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Shootings / mois</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">1 initial</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-purple-300 transition-colors duration-500">2 / trimestre</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">Sur mesure</td>
+                        </tr>
+                        <tr className="border-b border-white/15 hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Gestion réseaux</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">1 réseau</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-purple-300 transition-colors duration-500">Multi-plateformes</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">Cross-plateformes</td>
+                        </tr>
+                        <tr className="border-b border-white/15 hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Ads incluses</td>
+                          <td className="py-6 text-center font-semibold text-gray-500">-</td>
+                          <td className="py-6 text-center font-semibold text-purple-400 group-hover/row:text-purple-300 transition-colors duration-500">
+                            <Check className="w-5 h-5 mx-auto text-purple-400" />
+                          </td>
+                          <td className="py-6 text-center font-semibold text-cyan-400 group-hover/row:text-cyan-300 transition-colors duration-500">
+                            <Check className="w-5 h-5 mx-auto text-cyan-400" />
+                          </td>
+                        </tr>
+                        <tr className="border-b border-white/15 hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Direction artistique</td>
+                          <td className="py-6 text-center font-semibold text-gray-500">-</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-purple-300 transition-colors duration-500">Optimisation</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">Complète</td>
+                        </tr>
+                        <tr className="border-b border-white/15 hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Suivi & reporting</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">Mensuel</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-purple-300 transition-colors duration-500">Bi-mensuel</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">Avancé</td>
+                        </tr>
+                        <tr className="border-b-2 border-white/30 hover:bg-gradient-to-r hover:from-cyan-400/10 hover:via-purple-500/10 hover:to-cyan-400/10 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white text-lg group-hover/row:text-cyan-400 transition-colors duration-500">Prix indicatif</td>
+                          <td className="py-6 text-center text-cyan-400 font-black text-lg group-hover/row:text-cyan-300 transition-colors duration-500" style={{ textShadow: '0 0 20px rgba(0, 212, 255, 0.5)' }}>
+                            5 999 € TTC/an
+                          </td>
+                          <td className="py-6 text-center text-purple-400 font-black text-lg group-hover/row:text-purple-300 transition-colors duration-500" style={{ textShadow: '0 0 20px rgba(168, 85, 247, 0.5)' }}>
+                            À partir de 9 000 € HT/an
+                          </td>
+                          <td className="py-6 text-center text-cyan-400 font-black text-lg group-hover/row:text-cyan-300 transition-colors duration-500" style={{ textShadow: '0 0 20px rgba(0, 212, 255, 0.5)' }}>
+                            &gt; 15 000 € HT/an
+                          </td>
+                        </tr>
+                        <tr className="hover:bg-gradient-to-r hover:from-cyan-400/5 hover:via-purple-500/5 hover:to-cyan-400/5 transition-all duration-500 group/row">
+                          <td className="py-6 font-bold text-white group-hover/row:text-cyan-400 transition-colors duration-500">Délais moyens</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">2 semaines</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-purple-300 transition-colors duration-500">2-3 semaines</td>
+                          <td className="py-6 text-center font-semibold group-hover/row:text-cyan-300 transition-colors duration-500">3-4 semaines</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -1330,7 +1375,7 @@ export default function OffrePage() {
               </div>
               
               {/* Main Card Container - Ultra Premium Royal */}
-              <div className="relative bg-black/90 backdrop-blur-3xl rounded-3xl border-2 border-white/25 p-10 md:p-16 shadow-2xl shadow-black/70 group-hover/conference:border-white/40 group-hover/conference:shadow-cyan-400/20 group-hover/conference:shadow-purple-500/20 transition-all duration-700 overflow-hidden">
+              <div className="relative bg-black/90 backdrop-blur-3xl rounded-3xl p-10 md:p-16 shadow-2xl shadow-black/70 transition-all duration-700 overflow-hidden">
                 {/* Animated Background Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/8 via-purple-500/8 to-cyan-400/5 opacity-0 group-hover/conference:opacity-100 transition-opacity duration-700" style={{
                   backgroundSize: '200% 200%',
@@ -1410,25 +1455,10 @@ export default function OffrePage() {
                         priority
                       />
                       
-                      {/* Premium Border */}
-                      <div className="absolute inset-0 border-2 border-white/30 rounded-2xl group-hover/image:border-cyan-400/60 group-hover/image:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-all duration-700 z-20" style={{ 
-                        boxShadow: 'inset 0 0 40px rgba(0, 212, 255, 0.1)',
-                      }} />
-                      
-                      {/* Corner Accents */}
-                      <div className="absolute top-0 left-0 w-8 h-8 border-t-2 border-l-2 border-cyan-400/60 rounded-tl-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 z-30" style={{ boxShadow: '0 0 20px rgba(0, 212, 255, 0.4)' }} />
-                      <div className="absolute top-0 right-0 w-8 h-8 border-t-2 border-r-2 border-purple-500/60 rounded-tr-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 z-30" style={{ boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)' }} />
-                      <div className="absolute bottom-0 left-0 w-8 h-8 border-b-2 border-l-2 border-cyan-400/60 rounded-bl-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 z-30" style={{ boxShadow: '0 0 20px rgba(0, 212, 255, 0.4)' }} />
-                      <div className="absolute bottom-0 right-0 w-8 h-8 border-b-2 border-r-2 border-purple-500/60 rounded-br-2xl opacity-0 group-hover/image:opacity-100 transition-opacity duration-500 z-30" style={{ boxShadow: '0 0 20px rgba(168, 85, 247, 0.4)' }} />
                     </div>
                   </div>
                 </div>
                 
-                {/* Corner Accents - Main Card */}
-                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-cyan-400/40 rounded-tl-3xl opacity-0 group-hover/conference:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-purple-500/40 rounded-tr-3xl opacity-0 group-hover/conference:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
-                <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-cyan-400/40 rounded-bl-3xl opacity-0 group-hover/conference:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-purple-500/40 rounded-br-3xl opacity-0 group-hover/conference:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
               </div>
             </div>
           </div>
@@ -1611,22 +1641,10 @@ export default function OffrePage() {
                             ))}
                           </div>
                         </div>
-                        
-                        {/* Corner Accents */}
-                        <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-cyan-400/40 rounded-tl-3xl opacity-50" style={{ boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)' }} />
-                        <div className="absolute top-0 right-0 w-10 h-10 border-t-2 border-r-2 border-purple-500/40 rounded-tr-3xl opacity-50" style={{ boxShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }} />
-                        <div className="absolute bottom-0 left-0 w-10 h-10 border-b-2 border-l-2 border-cyan-400/40 rounded-bl-3xl opacity-50" style={{ boxShadow: '0 0 20px rgba(0, 212, 255, 0.3)' }} />
-                        <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-purple-500/40 rounded-br-3xl opacity-50" style={{ boxShadow: '0 0 20px rgba(168, 85, 247, 0.3)' }} />
                       </Dialog.Content>
                     </Dialog.Portal>
                   </Dialog.Root>
                 </div>
-                
-                {/* Corner Accents - Main Card */}
-                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-cyan-400/40 rounded-tl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-purple-500/40 rounded-tr-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
-                <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-cyan-400/40 rounded-bl-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-purple-500/40 rounded-br-3xl opacity-0 group-hover/pricing:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
               </div>
             </div>
           </div>
@@ -1658,7 +1676,7 @@ export default function OffrePage() {
               </div>
               
               {/* Main Container - Ultra Premium Royal */}
-              <div className="relative bg-black/90 backdrop-blur-3xl rounded-3xl border-2 border-white/25 p-12 md:p-20 shadow-2xl shadow-black/70 group-hover/cta:border-white/40 group-hover/cta:shadow-cyan-400/20 group-hover/cta:shadow-purple-500/20 transition-all duration-700 overflow-hidden">
+              <div className="relative bg-black/90 backdrop-blur-3xl rounded-3xl p-12 md:p-20 shadow-2xl shadow-black/70 transition-all duration-700 overflow-hidden">
                 {/* Animated Background Gradient */}
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-400/8 via-purple-500/8 to-cyan-400/5 opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" style={{
                   backgroundSize: '200% 200%',
@@ -1704,8 +1722,8 @@ export default function OffrePage() {
                   
                   {/* Premium Button - Centered */}
                   <div className="flex justify-center">
-                    <a
-                      href="#"
+                    <Link
+                      href="/contact#rendez-vous"
                       className="group/button relative px-12 py-6 bg-gradient-to-r from-cyan-400 via-purple-500 to-cyan-400 text-white font-bold text-lg rounded-2xl hover:scale-110 transition-all duration-500 shadow-2xl shadow-cyan-400/30 hover:shadow-cyan-400/50 hover:shadow-purple-500/30 flex items-center justify-center gap-4 overflow-hidden"
                       style={{ fontFamily: 'Montserrat, sans-serif' }}
                     >
@@ -1722,25 +1740,17 @@ export default function OffrePage() {
                       <Calendar className="w-6 h-6 relative z-10 group-hover/button:scale-110 transition-transform duration-500" />
                       <span className="relative z-10">Prendre rendez-vous</span>
                       
-                      {/* Corner Accents */}
-                      <div className="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-white/40 rounded-tl-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                      <div className="absolute top-0 right-0 w-4 h-4 border-t-2 border-r-2 border-white/40 rounded-tr-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                      <div className="absolute bottom-0 left-0 w-4 h-4 border-b-2 border-l-2 border-white/40 rounded-bl-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                      <div className="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-white/40 rounded-br-2xl opacity-0 group-hover/button:opacity-100 transition-opacity duration-500" />
-                    </a>
+                    </Link>
                   </div>
                 </div>
                 
-                {/* Corner Accents - Main Container */}
-                <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-cyan-400/40 rounded-tl-3xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute top-0 right-0 w-12 h-12 border-t-2 border-r-2 border-purple-500/40 rounded-tr-3xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
-                <div className="absolute bottom-0 left-0 w-12 h-12 border-b-2 border-l-2 border-cyan-400/40 rounded-bl-3xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(0, 212, 255, 0.3)' }} />
-                <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-purple-500/40 rounded-br-3xl opacity-0 group-hover/cta:opacity-100 transition-opacity duration-700" style={{ boxShadow: '0 0 30px rgba(168, 85, 247, 0.3)' }} />
               </div>
             </div>
           </div>
         </section>
       </div>
+      </div>
+      <Footer />
     </main>
   )
 }
