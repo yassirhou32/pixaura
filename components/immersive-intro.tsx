@@ -67,7 +67,7 @@ export function ImmersiveIntro({ onComplete }: ImmersiveIntroProps = {}) {
 
   const backgroundVideo =
     stage === "hold" || stage === "transition" || stage === "finishing"
-      ? "/Banque d_images/backv2.mp4"
+      ? "/Banque d_images/Backv2.mp4"
       : "/Banque d_images/back3.mp4"
 
   const overlayTone =
