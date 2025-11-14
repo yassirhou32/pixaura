@@ -293,45 +293,45 @@ export default function RealisationsPage() {
           playsInline
           preload="auto"
         >
-          <source src="/Banque d_images/backv1.mp4" type="video/mp4" />
+          <source src="/Banque d_images/i3.mp4" type="video/mp4" />
         </video>
       </div>
 
-      <section ref={sectionRef} className="relative pt-40 pb-20 px-6 bg-transparent overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-30 pointer-events-none transition-opacity duration-1000"
-          style={{
-            background: `radial-gradient(circle 600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(0, 200, 255, 0.15) 0%, rgba(124, 58, 237, 0.1) 30%, transparent 60%)`,
-          }}
-        />
+      <section ref={sectionRef} className="relative pt-40 pb-20 px-6 bg-transparent overflow-visible">
         <div className="relative z-10 mx-auto max-w-6xl space-y-12">
           <Reveal className="relative overflow-hidden px-6 py-12 text-center text-white md:px-10 md:py-16">
-            <div className="absolute inset-0 bg-gradient-to-br from-white/8 via-transparent to-transparent opacity-70" />
-            <div className="pointer-events-none absolute -top-40 -right-32 h-72 w-72 rounded-full bg-primary/30 blur-[140px]" />
-            <div className="pointer-events-none absolute -bottom-32 -left-28 h-72 w-72 rounded-full bg-cyan-400/25 blur-[140px]" />
-            <div className="pointer-events-none absolute top-1/2 left-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white/8 blur-[220px]" />
             <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6">
-              <span className="inline-flex items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70 backdrop-blur-lg">
-                Nos réalisations
+              <span className="relative inline-flex items-center gap-3 rounded-full border border-white/30 bg-gradient-to-br from-white/15 via-white/10 to-white/5 px-6 py-2.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,115,255,0.15)]">
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-transparent to-cyan-400/20 opacity-50 blur-xl" />
+                <span className="relative z-10">Nos réalisations</span>
               </span>
-              <h1 className="text-4xl font-black leading-tight md:text-5xl" style={{ fontFamily: "Montserrat, sans-serif" }}>
-                Films, shootings et campagnes qui <span className="bg-gradient-to-r from-white via-primary/80 to-white bg-clip-text text-transparent">amplifient l’aura</span> des marques.
+              <h1 className="text-4xl font-black leading-tight md:text-5xl relative" style={{ fontFamily: "Montserrat, sans-serif" }}>
+                <span className="relative z-10">
+                  Films, shootings et campagnes qui{' '}
+                  <span className="relative inline-block">
+                    <span className="absolute inset-0 bg-gradient-to-r from-primary/40 via-cyan-400/40 to-primary/40 blur-2xl opacity-60" />
+                    <span className="relative bg-gradient-to-r from-white via-primary/90 to-white bg-clip-text text-transparent">
+                      amplifient l'aura
+                    </span>
+                  </span>
+                  {' '}des marques.
+                </span>
               </h1>
-              <p className="text-sm text-white/70 md:text-base">
+              <p className="text-sm text-white/80 md:text-base leading-relaxed max-w-2xl">
                 Inspirez-vous de notre portfolio : un mix de formats premium conçus pour créer de l’impact, de l’émotion et des résultats mesurables.
               </p>
-              <div className="mt-4 flex flex-wrap justify-center gap-4 text-xs uppercase tracking-[0.28em] text-white/50">
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-lg">
-                  <span className="h-1.5 w-1.5 rounded-full bg-primary/70" />
-                  Film & Vidéo
+              <div className="mt-6 flex flex-wrap justify-center gap-3 text-xs uppercase tracking-[0.28em]">
+                <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,115,255,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(0,115,255,0.2)]">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-br from-primary/90 to-primary/70 shadow-[0_0_8px_rgba(0,115,255,0.6)]" />
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Film & Vidéo</span>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-lg">
-                  <span className="h-1.5 w-1.5 rounded-full bg-cyan-400/70" />
-                  Photo
+                <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(52,211,153,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(52,211,153,0.2)]">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-br from-cyan-400/90 to-cyan-400/70 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Photo</span>
                 </div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 backdrop-blur-lg">
-                  <span className="h-1.5 w-1.5 rounded-full bg-white/60" />
-                  Activation
+                <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(255,255,255,0.2)]">
+                  <span className="h-2 w-2 rounded-full bg-gradient-to-br from-white/90 to-white/70 shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Activation</span>
                 </div>
               </div>
             </div>
@@ -340,77 +340,28 @@ export default function RealisationsPage() {
           {/* Sticky Filters Section - Premium Design */}
           <div
             ref={filtersRef}
-            className={`mb-12 space-y-6 transition-all duration-300 ${
+            className={`mb-12 space-y-6 transition-all duration-300 overflow-visible ${
               isSticky
-                ? "sticky top-0 z-30 bg-white/10 backdrop-blur-xl py-3 -mx-6 px-6 border-b border-white/10 shadow-md"
+                ? "sticky top-0 z-30 py-3"
                 : ""
             }`}
           >
-            {/* All Filters Combined in One Line - Compact Premium Design with Exclusive Selection */}
-            <div className="relative overflow-hidden rounded-full border border-white/10 bg-white/6 px-4 py-3 shadow-[0_25px_80px_rgba(0,0,0,0.35)] backdrop-blur-2xl">
-              <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-white/5 via-transparent to-white/5" />
-              <div className="pointer-events-none absolute -left-10 top-1/2 h-24 w-24 -translate-y-1/2 rounded-full bg-primary/25 blur-3xl" />
-              <div className="pointer-events-none absolute -right-8 top-0 h-28 w-32 rounded-full bg-cyan-400/20 blur-3xl" />
-              <div className="relative flex flex-nowrap gap-2 justify-center overflow-x-auto pb-2 px-2 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none', WebkitOverflowScrolling: 'touch' }}>
+            {/* All Filters Combined in One Line - Ultra Premium Design */}
+            <div className="relative flex flex-nowrap gap-2.5 justify-center overflow-visible pb-2 px-0 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
                 {/* Tous Button */}
                 <button
                   onClick={() => setActiveFilter("Tous")}
-                  className={`group relative px-4 py-2 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-1.5 backdrop-blur-md flex-shrink-0 overflow-visible cursor-pointer ${
+                  className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
                     activeFilter === "Tous"
-                      ? "bg-[#0073FF] text-white shadow-lg shadow-[#0073FF]/50 border border-white/30"
-                      : "bg-white/10 text-white/70 border border-white/15"
-                  } group-hover:bg-white/20 group-hover:text-white group-hover:border-white/30 group-hover:shadow-lg group-hover:shadow-white/20`}
+                      ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
+                      : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
+                  }`}
                   aria-label="Afficher tous les projets"
                   style={{
                     fontFamily: 'Montserrat, sans-serif',
                     letterSpacing: '0.01em',
                   }}
                 >
-                  {/* Premium Smooth Hover Effects - Only when not active */}
-                  {activeFilter !== "Tous" && (
-                    <>
-                      {/* Premium Glow Pulse - Subtle Outer Glow */}
-                      <div className="absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                        background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, transparent 70%)',
-                        animation: 'premium-glow 2.5s ease-in-out infinite',
-                        filter: 'blur(12px)',
-                      }} />
-                      
-                      {/* Premium Shine Effect - Smooth Sweep */}
-                      <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent" style={{
-                          transform: 'translateX(-100%) translateY(-100%) rotate(45deg)',
-                          width: '200%',
-                          height: '200%',
-                          animation: 'premium-shine 2s ease-in-out infinite',
-                        }} />
-                      </div>
-                      
-                      {/* Subtle Inner Glow */}
-                      <div className="absolute inset-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                        background: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                        animation: 'premium-glow 3s ease-in-out infinite',
-                      }} />
-                      
-                      {/* Minimal Floating Particles - Very Subtle */}
-                      <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
-                        {[...Array(4)].map((_, i) => (
-                          <div
-                            key={i}
-                            className="absolute rounded-full bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                            style={{
-                              width: '1px',
-                              height: '1px',
-                              top: `${25 + (i * 20)}%`,
-                              left: `${20 + (i * 25)}%`,
-                              animation: `premium-particles 2.5s ease-out infinite ${i * 0.4}s`,
-                              filter: 'blur(0.5px)',
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
                   
                   <span className={`relative z-10 transition-all duration-300 ${activeFilter === "Tous" ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
                     <Briefcase className="w-3.5 h-3.5" />
@@ -433,62 +384,17 @@ export default function RealisationsPage() {
                     <button
                       key={`format-${format}`}
                       onClick={() => setActiveFilter(format)}
-                      className={`group relative px-4 py-2 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-1.5 backdrop-blur-md flex-shrink-0 overflow-visible cursor-pointer ${
+                      className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
                         isActive
-                          ? "bg-[#0073FF] text-white shadow-lg shadow-[#0073FF]/50 border border-white/30"
-                          : "bg-white/10 text-white/70 border border-white/15"
-                      } group-hover:bg-white/20 group-hover:text-white group-hover:border-white/30 group-hover:shadow-lg group-hover:shadow-white/20`}
+                          ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
+                          : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
+                      }`}
                       aria-label={`Filtrer par ${format}`}
                       style={{
                         fontFamily: 'Montserrat, sans-serif',
                         letterSpacing: '0.01em',
                       }}
                     >
-                      {/* Premium Smooth Hover Effects - Only when not active */}
-                      {!isActive && (
-                        <>
-                          {/* Premium Glow Pulse - Subtle Outer Glow */}
-                          <div className="absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                            background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, transparent 70%)',
-                            animation: 'premium-glow 2.5s ease-in-out infinite',
-                            filter: 'blur(12px)',
-                          }} />
-                          
-                          {/* Premium Shine Effect - Smooth Sweep */}
-                          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent" style={{
-                              transform: 'translateX(-100%) translateY(-100%) rotate(45deg)',
-                              width: '200%',
-                              height: '200%',
-                              animation: 'premium-shine 2s ease-in-out infinite',
-                            }} />
-                          </div>
-                          
-                          {/* Subtle Inner Glow */}
-                          <div className="absolute inset-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                            background: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                            animation: 'premium-glow 3s ease-in-out infinite',
-                          }} />
-                          
-                          {/* Minimal Floating Particles - Very Subtle */}
-                          <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
-                            {[...Array(4)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="absolute rounded-full bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                                style={{
-                                  width: '1px',
-                                  height: '1px',
-                                  top: `${25 + (i * 20)}%`,
-                                  left: `${20 + (i * 25)}%`,
-                                  animation: `premium-particles 2.5s ease-out infinite ${i * 0.4}s`,
-                                  filter: 'blur(0.5px)',
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
                       
                       <span className={`relative z-10 transition-all duration-300 ${isActive ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
                         {formatIcons[format]}
@@ -513,62 +419,17 @@ export default function RealisationsPage() {
                     <button
                       key={`sector-${sector}`}
                       onClick={() => setActiveFilter(sector)}
-                      className={`group relative px-4 py-2 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-1.5 backdrop-blur-md flex-shrink-0 overflow-visible cursor-pointer ${
+                      className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
                         isActive
-                          ? "bg-[#0073FF] text-white shadow-lg shadow-[#0073FF]/50 border border-white/30"
-                          : "bg-white/10 text-white/70 border border-white/15"
-                      } group-hover:bg-white/20 group-hover:text-white group-hover:border-white/30 group-hover:shadow-lg group-hover:shadow-white/20`}
+                          ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
+                          : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
+                      }`}
                       aria-label={`Filtrer par ${sector}`}
                       style={{
                         fontFamily: 'Montserrat, sans-serif',
                         letterSpacing: '0.01em',
                       }}
                     >
-                      {/* Premium Smooth Hover Effects - Only when not active */}
-                      {!isActive && (
-                        <>
-                          {/* Premium Glow Pulse - Subtle Outer Glow */}
-                          <div className="absolute -inset-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                            background: 'radial-gradient(circle, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.05) 50%, transparent 70%)',
-                            animation: 'premium-glow 2.5s ease-in-out infinite',
-                            filter: 'blur(12px)',
-                          }} />
-                          
-                          {/* Premium Shine Effect - Smooth Sweep */}
-                          <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none overflow-hidden">
-                            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/25 to-transparent" style={{
-                              transform: 'translateX(-100%) translateY(-100%) rotate(45deg)',
-                              width: '200%',
-                              height: '200%',
-                              animation: 'premium-shine 2s ease-in-out infinite',
-                            }} />
-                          </div>
-                          
-                          {/* Subtle Inner Glow */}
-                          <div className="absolute inset-0.5 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
-                            background: 'radial-gradient(circle at center, rgba(255,255,255,0.1) 0%, transparent 70%)',
-                            animation: 'premium-glow 3s ease-in-out infinite',
-                          }} />
-                          
-                          {/* Minimal Floating Particles - Very Subtle */}
-                          <div className="absolute inset-0 overflow-hidden rounded-full pointer-events-none">
-                            {[...Array(4)].map((_, i) => (
-                              <div
-                                key={i}
-                                className="absolute rounded-full bg-white/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
-                                style={{
-                                  width: '1px',
-                                  height: '1px',
-                                  top: `${25 + (i * 20)}%`,
-                                  left: `${20 + (i * 25)}%`,
-                                  animation: `premium-particles 2.5s ease-out infinite ${i * 0.4}s`,
-                                  filter: 'blur(0.5px)',
-                                }}
-                              />
-                            ))}
-                          </div>
-                        </>
-                      )}
                       
                       <span className={`relative z-10 transition-all duration-300 ${isActive ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
                         {sectorIcons[sector]}
@@ -583,12 +444,10 @@ export default function RealisationsPage() {
                       </span>
                     </button>
                   )
-                })}
-              </div>
+                  })}
+                </div>
             </div>
-          </div>
 
-          <SectionDivider label="Sélection premium" />
           {/* Portfolio Grid - Premium Cards */}
           {filteredProjects.length === 0 ? (
             <div className="text-center py-20">
@@ -606,11 +465,12 @@ export default function RealisationsPage() {
                 <Reveal
                   key={project.id}
                   delay={index * 120}
-                  className="group relative overflow-hidden rounded-3xl border border-white/15 bg-white/5 text-white backdrop-blur-xl transition duration-700 ease-out hover:-translate-y-3 hover:scale-[1.01] hover:border-white/25 hover:bg-white/10 hover:shadow-[0_45px_140px_rgba(0,0,0,0.55)]"
+                  className="group relative overflow-hidden rounded-3xl border border-white/20 bg-gradient-to-br from-white/8 via-white/5 to-white/3 text-white backdrop-blur-2xl transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-white/35 hover:bg-gradient-to-br hover:from-white/12 hover:via-white/8 hover:to-white/5 hover:shadow-[0_25px_80px_rgba(0,115,255,0.25),0_0_0_1px_rgba(255,255,255,0.1)]"
                 >
-                  <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-700 ease-out group-hover:opacity-100">
-                    <div className="absolute -inset-6 rounded-[40px] bg-gradient-to-r from-primary/20 via-white/10 to-cyan-400/20 blur-3xl animate-pulse" />
-                    <div className="absolute inset-0 rounded-[30px] border border-white/20 opacity-60" />
+                  <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100">
+                    <div className="absolute -inset-8 rounded-[40px] bg-gradient-to-r from-primary/30 via-white/15 to-cyan-400/30 blur-3xl" />
+                    <div className="absolute inset-0 rounded-[30px] bg-gradient-to-br from-primary/10 via-transparent to-cyan-400/10" />
+                    <div className="absolute inset-0 rounded-[30px] border border-white/30 opacity-80" />
                   </div>
                   <button
                     type="button"
@@ -646,25 +506,25 @@ export default function RealisationsPage() {
                           loading="lazy"
                         />
                       )}
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
-                      <span className="absolute bottom-5 left-5 rounded-full border border-white/20 bg-white/15 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/75 backdrop-blur-sm">
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent" />
+                      <span className="absolute bottom-5 left-5 rounded-full border border-white/30 bg-gradient-to-br from-white/20 via-white/15 to-white/10 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90 backdrop-blur-xl shadow-[0_4px_16px_rgba(0,0,0,0.3)]">
                         {project.category}
                       </span>
                     </div>
 
-                    <div className="flex flex-col gap-4 px-8 py-8 text-white">
-                      <h3 className="text-xl font-semibold leading-tight md:text-2xl">
+                    <div className="flex flex-col gap-5 px-8 py-8 text-white">
+                      <h3 className="text-xl font-bold leading-tight md:text-2xl text-white/95 group-hover:text-white transition-colors duration-300">
                         {project.title}
                       </h3>
-                      <div className="flex items-center gap-4 text-xs uppercase tracking-[0.28em] text-white/50">
+                      <div className="flex items-center gap-4 text-xs uppercase tracking-[0.28em] text-white/60">
                         <span className="flex items-center gap-2">
-                          <span className="h-1 w-1 rounded-full bg-white/50" />
-                          {project.category}
+                          <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-br from-white/70 to-white/50 shadow-[0_0_4px_rgba(255,255,255,0.5)]" />
+                          <span className="text-white/70">{project.category}</span>
                         </span>
-                        <span className="h-px flex-1 bg-white/20" />
-                        <span className="inline-flex items-center gap-2 text-white transition duration-300 group-hover:text-white/70">
+                        <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
+                        <span className="inline-flex items-center gap-2 text-white/80 transition-all duration-300 group-hover:text-white group-hover:gap-3">
                           Voir le projet
-                          <ArrowRight className="h-3 w-3" />
+                          <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                         </span>
                       </div>
                     </div>
@@ -674,25 +534,35 @@ export default function RealisationsPage() {
             </div>
           )}
 
-          {/* CTA Section */}
-          <Reveal className="relative mt-20 overflow-hidden px-8 py-16 text-center text-white">
-            <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-white/6 via-transparent to-transparent" />
-            <div className="pointer-events-none absolute -right-20 -top-24 h-64 w-64 rounded-full bg-[#0073FF]/25 blur-3xl" />
-            <div className="pointer-events-none absolute -left-16 bottom-0 h-56 w-56 rounded-full bg-cyan-400/25 blur-[140px]" />
-            <div className="pointer-events-none absolute top-1/2 left-1/2 h-[480px] w-[480px] -translate-x-1/2 -translate-y-1/2 transform rounded-full bg-white/6 blur-[210px]" />
-            <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-6">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/70 backdrop-blur-lg">
-                parlons de votre prochain succès
+          {/* CTA Section - Ultra Premium */}
+          <Reveal className="relative mt-24 overflow-hidden px-8 py-20 text-center text-white">
+            <div className="relative mx-auto flex max-w-3xl flex-col items-center gap-8">
+              {/* Premium Badge */}
+              <span className="relative inline-flex items-center gap-2 rounded-full border border-white/30 bg-gradient-to-br from-white/15 via-white/10 to-white/5 px-6 py-2.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,115,255,0.15)]">
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-transparent to-cyan-400/20 opacity-50 blur-xl" />
+                <span className="relative z-10">parlons de votre prochain succès</span>
               </span>
-              <p className="text-xl font-semibold md:text-2xl">
-                Vous souhaitez un rendu <span className="bg-gradient-to-r from-white via-primary/70 to-white bg-clip-text text-transparent">aussi impactant</span> ? Transformons votre idée en performance.
+              
+              {/* Enhanced Text */}
+              <p className="text-xl font-bold md:text-2xl leading-relaxed text-white/95">
+                Vous souhaitez un rendu{' '}
+                <span className="relative inline-block">
+                  <span className="absolute inset-0 bg-gradient-to-r from-primary/40 via-cyan-400/40 to-primary/40 blur-xl opacity-50" />
+                  <span className="relative bg-gradient-to-r from-white via-primary/90 to-white bg-clip-text text-transparent">
+                    aussi impactant
+                  </span>
+                </span>
+                {' '}? Transformons votre idée en performance.
               </p>
+              
+              {/* Premium Button */}
               <Link
                 href="/#contact"
-                className="inline-flex items-center gap-3 rounded-full bg-[#0073FF] px-10 py-4 text-sm font-bold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:scale-105 hover:bg-[#1AA3FF] shadow-lg shadow-[#0073FF]/50"
+                className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] px-12 py-5 text-sm font-bold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgba(0,115,255,0.5)] shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/20"
               >
-                Prendre rendez-vous
-                <ArrowRight className="h-4 w-4" />
+                <span className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 via-transparent to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                <span className="relative z-10">Prendre rendez-vous</span>
+                <ArrowRight className="h-4 w-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>
           </Reveal>

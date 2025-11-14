@@ -329,6 +329,7 @@ export default function ContactPage() {
         </div>
       </section>
 
+
       {/* Calendar Section */}
       <section id="rendez-vous" className="relative py-20 px-6 bg-black overflow-hidden border-t border-white/10">
         {/* Background Effects */}

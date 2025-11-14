@@ -1,0 +1,686 @@
+"use client"
+
+import { useCallback, useEffect, useMemo, useRef, useState } from "react"
+
+type Stage = "loading" | "start" | "transition" | "hold" | "finishing" | "hidden"
+
+type ImmersiveIntroProps = {
+  onComplete?: () => void
+}
+
+const LOADING_DURATION = 2600
+const HOLD_DURATION = 2400
+const RESET_DURATION = 520
+const START_TRANSITION_DELAY = 600
+
+const LOADING_PHASES = [
+  {
+    threshold: 25,
+    headline: "Initialisation du noyau créatif",
+    detail: "Synchronisation des studios Paris • Doha • Montréal",
+    ticker: "Alignement des satellites narratifs",
+  },
+  {
+    threshold: 55,
+    headline: "Calibration audiovisuelle globale",
+    detail: "Orchestration lumière, audio 360° et FX immersifs",
+    ticker: "Harmonisation des fréquences premium",
+  },
+  {
+    threshold: 85,
+    headline: "Activation des équipes mondiales",
+    detail: "Brief des talents et verrouillage des fuseaux horaires",
+    ticker: "Déploiement des cellules stratégiques",
+  },
+  {
+    threshold: 100,
+    headline: "Prêt pour le décollage Pixaura",
+    detail: "Dernières vérifications de l'expérience immersive",
+    ticker: "Validation du protocole d'entrée",
+  },
+]
+
+export function ImmersiveIntro({ onComplete }: ImmersiveIntroProps = {}) {
+  const [stage, setStage] = useState<Stage>("loading")
+  const [loadingProgress, setLoadingProgress] = useState(0)
+  const [holdProgress, setHoldProgress] = useState(0)
+  const holdProgressRef = useRef(0)
+  const soundOn = true
+  const [isFadingOut, setIsFadingOut] = useState(false)
+  const [startAnimation, setStartAnimation] = useState(false)
+
+  const holdRafRef = useRef<number>()
+  const resetRafRef = useRef<number>()
+  const holdStartRef = useRef<number | null>(null)
+  const stageRef = useRef<Stage>("loading")
+  const startTimeoutRef = useRef<number>()
+  const audioRef = useRef<HTMLAudioElement | null>(null)
+  const [audioStarted, setAudioStarted] = useState(false)
+  const holdPulseRef = useRef<number>()
+  const holdTrailRef = useRef<number>()
+  const [holdPulse, setHoldPulse] = useState(0)
+  const [trailPositions, setTrailPositions] = useState<{ id: number; progress: number }[]>([])
+  const lastTrailProgressRef = useRef(0)
+
+  const displayLoading = useMemo(() => Math.round(loadingProgress), [loadingProgress])
+  const displayHold = useMemo(() => Math.round(holdProgress), [holdProgress])
+
+  const backgroundVideo =
+    stage === "hold" || stage === "transition" || stage === "finishing"
+      ? "/Banque d_images/backv2.mp4"
+      : "/Banque d_images/back3.mp4"
+
+  const overlayTone =
+    stage === "hold" || stage === "finishing"
+      ? "bg-black/55"
+      : stage === "transition"
+        ? "bg-black/35"
+        : "bg-black/20"
+
+  const clearHoldAnimations = useCallback(() => {
+    if (holdRafRef.current) cancelAnimationFrame(holdRafRef.current)
+    if (resetRafRef.current) cancelAnimationFrame(resetRafRef.current)
+    if (holdTrailRef.current) cancelAnimationFrame(holdTrailRef.current)
+    holdRafRef.current = undefined
+    resetRafRef.current = undefined
+    holdTrailRef.current = undefined
+  }, [])
+
+  const finishIntro = useCallback(() => {
+    setHoldProgress(100)
+    setStage("finishing")
+    setTimeout(() => setIsFadingOut(true), 260)
+    setTimeout(() => {
+      setStage("hidden")
+      onComplete?.()
+    }, 1100)
+  }, [onComplete])
+
+  const animateHold = useCallback(
+    (timestamp: number) => {
+      if (holdStartRef.current === null) {
+        holdStartRef.current = timestamp
+      }
+      const elapsed = timestamp - holdStartRef.current
+      const next = Math.min(100, (elapsed / HOLD_DURATION) * 100)
+      setHoldProgress(next)
+
+      if (next >= 100) {
+        clearHoldAnimations()
+        finishIntro()
+        return
+      }
+
+      holdRafRef.current = requestAnimationFrame(animateHold)
+    },
+    [clearHoldAnimations, finishIntro]
+  )
+
+  const animateReset = useCallback(
+    (timestamp: number, startValue: number, startTimestamp: number) => {
+      const elapsed = timestamp - startTimestamp
+      const easing = Math.min(1, elapsed / RESET_DURATION)
+      const eased = startValue * (1 - easing * easing)
+      setHoldProgress(eased)
+
+      if (easing < 1) {
+        resetRafRef.current = requestAnimationFrame((next) => animateReset(next, startValue, startTimestamp))
+      } else {
+        setHoldProgress(0)
+      }
+    },
+    []
+  )
+
+  const startHold = useCallback(() => {
+    if (stageRef.current !== "hold") return
+    clearHoldAnimations()
+    holdStartRef.current = null
+    holdRafRef.current = requestAnimationFrame(animateHold)
+    const now = Date.now()
+    setTrailPositions((prev) => [...prev.slice(-8), { id: now, progress: holdProgressRef.current }])
+    lastTrailProgressRef.current = holdProgressRef.current
+    if (holdTrailRef.current) cancelAnimationFrame(holdTrailRef.current)
+    const trailLoop = () => {
+      setTrailPositions((prev) =>
+        prev
+          .map((trail) => ({
+            ...trail,
+            progress: Math.min(100, trail.progress + 0.8),
+          }))
+          .filter((trail) => trail.progress <= holdProgressRef.current + 32)
+      )
+      holdTrailRef.current = requestAnimationFrame(trailLoop)
+    }
+    holdTrailRef.current = requestAnimationFrame(trailLoop)
+  }, [animateHold, clearHoldAnimations])
+
+  const cancelHold = useCallback(() => {
+    if (stageRef.current !== "hold") return
+    clearHoldAnimations()
+    if (holdProgress === 0) return
+
+    const current = holdProgress
+    const startTimestamp = performance.now()
+    resetRafRef.current = requestAnimationFrame((timestamp) => animateReset(timestamp, current, startTimestamp))
+    if (holdTrailRef.current) cancelAnimationFrame(holdTrailRef.current)
+    setTrailPositions([])
+    lastTrailProgressRef.current = 0
+  }, [animateReset, clearHoldAnimations, holdProgress])
+
+  useEffect(() => {
+    stageRef.current = stage
+  }, [stage])
+
+  useEffect(() => {
+    if (stage !== "loading") return
+
+    setLoadingProgress(0)
+    let rafId: number
+    const start = performance.now()
+
+    const tick = (now: number) => {
+      const elapsed = now - start
+      const next = Math.min(100, (elapsed / LOADING_DURATION) * 100)
+      setLoadingProgress(next)
+
+      if (next >= 100) {
+        setStage("start")
+        return
+      }
+
+      rafId = requestAnimationFrame(tick)
+    }
+
+    rafId = requestAnimationFrame(tick)
+    return () => cancelAnimationFrame(rafId)
+  }, [stage])
+
+  useEffect(() => {
+    if (stage === "hold") {
+      setIsFadingOut(false)
+      setHoldProgress((value) => (value === 100 ? 0 : value))
+    }
+    if (stage !== "start") {
+      setStartAnimation(false)
+    }
+  }, [stage])
+
+  useEffect(() => {
+    if (stage !== "transition") return
+    setHoldProgress(0)
+    const timeoutId = setTimeout(() => {
+      setStage("hold")
+    }, 1300)
+    return () => clearTimeout(timeoutId)
+  }, [stage])
+
+  useEffect(() => {
+    if (stage !== "hold") return
+
+    const handleWindowMouseUp = () => cancelHold()
+    window.addEventListener("mouseup", handleWindowMouseUp)
+    window.addEventListener("touchend", handleWindowMouseUp)
+    return () => {
+      window.removeEventListener("mouseup", handleWindowMouseUp)
+      window.removeEventListener("touchend", handleWindowMouseUp)
+    }
+  }, [cancelHold, stage])
+
+  useEffect(() => () => clearHoldAnimations(), [clearHoldAnimations])
+  useEffect(() => {
+    let animationId: number
+    const animate = () => {
+      setHoldPulse((value) => (value + 0.75) % 360)
+      animationId = requestAnimationFrame(animate)
+    }
+    animationId = requestAnimationFrame(animate)
+    return () => cancelAnimationFrame(animationId)
+  }, [])
+  useEffect(() => {
+    return () => {
+      if (startTimeoutRef.current) clearTimeout(startTimeoutRef.current)
+      if (holdTrailRef.current) cancelAnimationFrame(holdTrailRef.current)
+    }
+  }, [])
+
+  useEffect(() => {
+    const audio = new Audio("/Banque d_images/mixkit-relaxing-harp-sweep-2628.wav")
+    audio.loop = false
+    audio.volume = 0.65
+    audio.preload = "auto"
+    audio.muted = true
+    audioRef.current = audio
+
+    audio
+      .play()
+      .then(() => {
+        audio.pause()
+        audio.currentTime = 0
+      })
+      .catch(() => {
+        audio.pause()
+        audio.currentTime = 0
+      })
+      .finally(() => {
+        audio.muted = false
+      })
+
+    return () => {
+      audio.pause()
+      audioRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const audio = audioRef.current
+    if (!audio) return
+
+    if (stage === "start" || stage === "hold") {
+      let cancelled = false
+
+      const tryPlay = () => {
+        if (cancelled) return
+        if (stageRef.current !== "start" && stageRef.current !== "hold") return
+
+        audio
+          .play()
+          .then(() => {
+            setAudioStarted(true)
+          })
+          .catch(() => {
+            setAudioStarted(false)
+            audio.pause()
+            audio.currentTime = 0
+            if (!cancelled) {
+              setTimeout(tryPlay, 320)
+            }
+          })
+      }
+
+      if (!audioStarted || audio.paused) {
+        audio.currentTime = 0
+        tryPlay()
+      }
+
+      return () => {
+        cancelled = true
+      }
+    }
+  }, [stage, audioStarted])
+
+  useEffect(() => {
+    if (stage === "loading") {
+      setAudioStarted(false)
+    }
+  }, [stage])
+
+  useEffect(() => {
+    if (stage === "hold") return
+    if (holdTrailRef.current) cancelAnimationFrame(holdTrailRef.current)
+    setTrailPositions([])
+    lastTrailProgressRef.current = 0
+  }, [stage])
+
+  useEffect(() => {
+    holdProgressRef.current = holdProgress
+  }, [holdProgress])
+
+  useEffect(() => {
+    if (stage !== "hold") return
+    if (holdProgress - lastTrailProgressRef.current < 6) return
+    lastTrailProgressRef.current = holdProgress
+    const id = Date.now()
+    setTrailPositions((prev) => [...prev.slice(-10), { id, progress: holdProgress }])
+  }, [holdProgress, stage])
+
+  const handleStart = () => {
+    if (stage !== "start" || startAnimation) return
+    setStartAnimation(true)
+    startTimeoutRef.current = window.setTimeout(() => {
+      setStage("transition")
+      setStartAnimation(false)
+    }, START_TRANSITION_DELAY)
+  }
+
+  const currentPhase = useMemo(() => {
+    return LOADING_PHASES.find((phase) => displayLoading <= phase.threshold) ?? LOADING_PHASES[LOADING_PHASES.length - 1]
+  }, [displayLoading])
+
+  const progressScale = useMemo(() => Math.max(displayLoading, 2) / 100, [displayLoading])
+  const progressRatio = useMemo(() => Math.min(1, Math.max(0, displayLoading / 100)), [displayLoading])
+  const progressFormatted = useMemo(() => displayLoading.toString().padStart(3, "0"), [displayLoading])
+  const progressCircleBackground = useMemo(() => {
+    const angle = progressRatio * 360
+    return `conic-gradient(
+      from -90deg,
+      rgba(78,129,255,0.85) 0deg,
+      rgba(130,84,255,0.9) ${Math.max(angle - 12, 0)}deg,
+      rgba(101,225,255,0.95) ${angle}deg,
+      rgba(255,255,255,0.08) ${angle}deg 360deg
+    )`
+  }, [progressRatio])
+  const progressAngle = useMemo(() => progressRatio * 360, [progressRatio])
+
+  if (stage === "hidden") return null
+
+  return (
+    <div
+      className={`fixed inset-0 z-[9999] overflow-hidden bg-black transition-opacity duration-700 ${
+        isFadingOut ? "pointer-events-none opacity-0" : "opacity-100"
+      }`}
+    >
+      <video
+        key={backgroundVideo}
+        className="absolute inset-0 h-full w-full object-cover"
+        autoPlay
+        loop
+        muted
+        playsInline
+        preload="auto"
+      >
+        <source src={backgroundVideo} type="video/mp4" />
+      </video>
+
+      <div className={`absolute inset-0 ${overlayTone}`} />
+      <div className="absolute inset-0 bg-[url('/Banque d_images/noise.png')] opacity-[0.08] mix-blend-overlay" />
+
+      {stage === "loading" && (
+        <div className="relative z-10 flex h-full w-full flex-col justify-between px-8 py-14 text-white md:px-16">
+          <div className="pointer-events-none absolute inset-x-0 top-[-14%] mx-auto h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_rgba(68,109,255,0.28),_transparent_78%)] blur-[160px]" />
+          <div className="pointer-events-none absolute inset-x-0 bottom-[-18%] mx-auto h-[540px] w-[540px] rounded-full bg-[radial-gradient(circle,_rgba(255,206,92,0.32),_transparent_80%)] blur-[190px]" />
+
+          <header className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.52em] text-white/70">
+            <span className="flex items-center gap-3">
+              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-[9px] tracking-[0.5em] text-white">
+                pl
+              </span>
+              immersion sequence
+            </span>
+            <div className="flex items-center gap-3 text-white/60">
+              <span className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.5em] text-white/80">
+                sync {progressFormatted}%
+              </span>
+              <span className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.5em]">
+                aura locked
+              </span>
+            </div>
+          </header>
+
+          <main className="relative flex flex-1 flex-col items-center justify-center">
+            <div className="relative flex flex-col items-center gap-12">
+              <div className="flex flex-col items-center gap-3 text-xs uppercase tracking-[0.62em] text-white/50">
+                <span>immersive loading sequence</span>
+                <span className="text-white/75">préparez l&apos;entrée pixaura</span>
+              </div>
+
+              <div className="relative flex items-center justify-center">
+                <div className="relative h-[340px] w-[340px] rounded-full border border-white/20 bg-white/5 backdrop-blur-3xl shadow-[0_40px_70px_rgba(8,14,46,0.55)]">
+                  <div className="absolute inset-6 rounded-full border border-white/15 bg-black/55 backdrop-blur-3xl shadow-[inset_0_0_65px_rgba(17,33,84,0.55)]" />
+                  <div className="absolute inset-6 rounded-full opacity-90" style={{ background: progressCircleBackground }} />
+                  <div className="absolute inset-6 rounded-full">
+                    <div
+                      className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2"
+                      style={{ transform: `rotate(${progressAngle}deg)` }}
+                    >
+                      <div className="absolute left-1/2 top-[18px] h-4 w-4 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(255,224,150,0.98),_rgba(255,164,63,0.8))] shadow-[0_0_25px_rgba(255,193,79,0.95)]" />
+                    </div>
+                  </div>
+                  <div className="absolute inset-[102px] rounded-full border border-white/25 bg-[radial-gradient(circle,_rgba(24,35,72,0.9),_transparent_85%)] backdrop-blur-xl" />
+                  <div className="absolute inset-[118px] flex flex-col items-center justify-center gap-4 text-center uppercase">
+                    <span className="text-[11px] tracking-[0.55em] text-white/50">status</span>
+                    <span className="text-[clamp(44px,7vw,70px)] font-black tracking-tight text-white drop-shadow-[0_0_35px_rgba(255,196,111,0.45)]">
+                      {progressFormatted}%
+                    </span>
+                    <span className="text-[10px] tracking-[0.48em] text-white/55">experience boot sequence</span>
+                  </div>
+                  <div className="absolute inset-[36px] rounded-full border border-white/15" />
+                  <div className="absolute inset-[36px] rounded-full border border-white/10 border-dashed opacity-40 animate-[spin_14s_linear_infinite]" />
+                  <div className="absolute inset-[150px] flex items-center justify-between px-5 text-[9px] uppercase tracking-[0.38em] text-white/55">
+                    <span>0%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+                <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,_rgba(92,110,255,0.38),_transparent_70%)] blur-2xl animate-[pulse_4.5s_ease-in-out_infinite]" />
+                <div className="pointer-events-none absolute inset-0 -z-20 animate-[spin_18s_linear_infinite] rounded-full border border-white/10 opacity-40" />
+                <div className="pointer-events-none absolute inset-[-18px] -z-30 h-[380px] w-[380px] rounded-full border border-white/20 opacity-30 blur-sm" />
+              </div>
+
+              <div className="flex flex-col items-center gap-3 text-sm uppercase tracking-[0.48em] text-white/70">
+                <span>{currentPhase.headline}</span>
+                <span className="text-white/50">{currentPhase.detail}</span>
+              </div>
+            </div>
+          </main>
+
+          <footer className="flex items-center justify-between text-[10px] uppercase tracking-[0.48em] text-white/60">
+            <span className="flex items-center gap-2">
+              <span className="h-2 w-2 rounded-full bg-[radial-gradient(circle,_rgba(111,217,255,0.95),_rgba(64,135,255,0.85))] shadow-[0_0_16px_rgba(96,180,255,0.95)]" />
+              systèmes synchronisés • {progressFormatted}%
+            </span>
+            <span>sound design activé • écoute conseillée</span>
+          </footer>
+        </div>
+      )}
+
+      {stage === "start" && (
+        <div className="relative z-10 mx-auto flex h-full w-full max-w-5xl flex-col justify-between px-6 py-12 text-white md:px-10">
+          {startAnimation && (
+            <>
+              <div className="start-overlay" />
+              <div className="start-overlay start-overlay-delay" />
+            </>
+          )}
+          <header
+            className={`flex items-center justify-start text-xs font-semibold uppercase tracking-[0.4em] text-white/65 ${
+              startAnimation ? "start-fade-element" : ""
+            }`}
+          >
+            <span>pixaura</span>
+          </header>
+
+          <main
+            className={`relative flex flex-1 flex-col items-center justify-center gap-10 text-center ${
+              startAnimation ? "start-main-anim" : ""
+            }`}
+          >
+            <p className="text-xs uppercase tracking-[0.6em] text-white/60">immerse the experience</p>
+            <div className="flex flex-wrap items-center justify-center gap-6 text-[clamp(42px,8vw,82px)] font-black uppercase tracking-tight">
+              <span>Immerse</span>
+              <button
+                onClick={handleStart}
+                disabled={startAnimation}
+                className={`group relative inline-flex h-32 w-32 items-center justify-center rounded-full border-2 border-white/70 bg-white/10 text-base font-semibold uppercase tracking-[0.4em] transition-all duration-300 hover:scale-[1.05] ${
+                  startAnimation ? "start-button-active" : ""
+                }`}
+              >
+                <span className="relative z-10">start</span>
+                <span className="absolute inset-[6px] rounded-full border border-white/25 bg-white/10 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <span
+                  className={`start-button-wave ${startAnimation ? "start-button-wave-active" : ""}`}
+                  aria-hidden="true"
+                />
+              </button>
+              <span>me in</span>
+              <span className="text-[clamp(42px,8vw,82px)]">→</span>
+            </div>
+            <p className="max-w-xl text-sm uppercase tracking-[0.35em] text-white/60">
+              Cliquez sur start pour activer l&apos;entrée immersive Pixaura.
+            </p>
+          </main>
+
+          <footer
+            className={`flex items-center justify-between text-[11px] uppercase tracking-[0.35em] text-white/55 ${
+              startAnimation ? "start-fade-element" : ""
+            }`}
+          >
+            <span>scroll pour découvrir</span>
+            <span>maintenir ensuite pour débloquer</span>
+          </footer>
+        </div>
+      )}
+
+      {stage === "transition" && (
+        <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-16 px-8 py-10 text-white md:px-16">
+          <div className="flex flex-col items-center gap-4 text-center uppercase tracking-[0.5em] text-white/70">
+            <span className="text-xs text-white/55">Séquence d&apos;activation</span>
+            <div className="flex flex-wrap items-center justify-center gap-4 text-[clamp(36px,8vw,72px)] font-black">
+              <span>Immersion</span>
+              <span className="inline-flex items-center gap-3 rounded-full border border-white/30 bg-white/10 px-6 py-2 text-xs font-semibold tracking-[0.4em] text-white">
+                lancement
+              </span>
+            </div>
+            <span className="text-xs text-white/55">Préparez-vous à maintenir pour débloquer</span>
+          </div>
+
+          <div className="relative h-64 w-64 max-w-[70vw]">
+            <div className="absolute inset-0 rounded-full border border-white/15 opacity-60" />
+            <div className="absolute inset-6 rounded-full border border-white/20 opacity-40" />
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="relative h-full w-full">
+                <span className="launch-ring absolute inset-0 rounded-full border border-white/30" />
+                <span className="launch-ring launch-ring-delay absolute inset-[12%] rounded-full border border-white/20" />
+                <span className="launch-core absolute left-1/2 top-1/2 h-16 w-16 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(145,196,255,0.82),_rgba(22,36,84,0.92))] shadow-[0_0_45px_rgba(64,162,255,0.7)]" />
+              </div>
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="launch-particles relative h-[88%] w-[88%] rounded-full border border-white/10">
+                {[...Array(12)].map((_, index) => (
+                  <span
+                    key={index}
+                    className="launch-particle absolute h-1.5 w-1.5 rounded-full bg-white/80 shadow-[0_0_12px_rgba(255,255,255,0.65)]"
+                    style={{ transform: `rotate(${index * 30}deg) translateX(48%)` }}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <p className="text-xs uppercase tracking-[0.4em] text-white/55">
+            Synchronisation globale • Hologramme orbital en cours d&apos;initialisation
+          </p>
+        </div>
+      )}
+
+      {(stage === "hold" || stage === "finishing") && (
+        <div className="relative z-10 flex h-full w-full flex-col justify-between px-8 py-10 text-white md:px-16">
+          <header className="flex items-center justify-between text-xs font-semibold uppercase tracking-[0.4em] text-white/80">
+            <div className="flex items-center gap-2">
+              <span>Pixaura</span>
+            </div>
+            <div className="flex items-center gap-6">
+              <span className="text-white/45">experience • 02</span>
+            </div>
+          </header>
+
+          <main className="flex flex-1 flex-col items-center justify-center gap-14">
+            <div className="text-center">
+              <p className="text-xs uppercase tracking-[0.6em] text-white/60">cliquez et maintenez pour entrer</p>
+              <h2 className="mt-6 text-[clamp(68px,12vw,140px)] font-black uppercase leading-none tracking-tight text-white drop-shadow-[0_0_30px_rgba(0,0,0,0.45)]">
+                Pixaura
+              </h2>
+            </div>
+
+            <button
+              onMouseDown={startHold}
+              onMouseUp={cancelHold}
+              onMouseLeave={cancelHold}
+              onTouchStart={(event) => {
+                event.preventDefault()
+                startHold()
+              }}
+              onTouchEnd={(event) => {
+                event.preventDefault()
+                cancelHold()
+              }}
+              disabled={stage !== "hold"}
+              className="group relative flex h-40 w-40 items-center justify-center rounded-full border border-white/45 bg-white/10 text-[11px] font-semibold uppercase tracking-[0.35em] text-white shadow-[0_30px_60px_rgba(8,13,38,0.55)] transition-all duration-500 hover:scale-[1.06] disabled:cursor-default disabled:opacity-80"
+            >
+              <span className="relative z-20 tracking-[0.38em]">cliquez & maintenez</span>
+              <div className="pointer-events-none absolute inset-0 rounded-full bg-[radial-gradient(circle,_rgba(112,162,255,0.2),_transparent_75%)] blur-[18px]" />
+              <div className="absolute inset-3 rounded-full border border-white/25 opacity-60" />
+              <div className="absolute inset-[10px] rounded-full border border-white/15 opacity-60" />
+              <div
+                className="pointer-events-none absolute inset-1 rounded-full opacity-80 blur-[8px] transition-opacity duration-500"
+                style={{
+                  opacity: stage === "hold" ? 0.95 : 0.6,
+                  background: `conic-gradient(from ${holdPulse}deg, rgba(92,144,255,0.45), rgba(148,99,255,0.6), rgba(86,229,255,0.45), rgba(92,144,255,0.45))`,
+                }}
+              />
+              <div
+                className="pointer-events-none absolute inset-[18px] rounded-full border border-white/40"
+                style={{
+                  opacity: 0.35 + holdProgress / 220,
+                  boxShadow: `0 0 ${12 + holdProgress / 4}px rgba(102, 183, 255, 0.45)`,
+                }}
+              />
+              <div className="pointer-events-none absolute inset-[26px] rounded-full border border-white/30 opacity-30 animate-[spin_10s_linear_infinite]" />
+              <div className="pointer-events-none absolute inset-[6px] rounded-full">
+                {trailPositions.map((trail) => {
+                  const angle = (trail.progress / 100) * 360
+                  const distance = 60 + (holdProgress / 100) * 8
+                  const alpha = Math.max(0, 1 - Math.abs(holdProgress - trail.progress) / 35)
+                  const scale = 1 + holdProgress / 220
+                  return (
+                    <span
+                      key={trail.id}
+                      className="absolute left-1/2 top-1/2 h-3 w-3 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(circle,_rgba(130,214,255,0.9),_rgba(90,132,255,0.6))] shadow-[0_0_12px_rgba(90,150,255,0.85)] transition-transform duration-150"
+                      style={{
+                        transform: `rotate(${angle}deg) translateX(${distance}px) scale(${scale})`,
+                        opacity: alpha,
+                      }}
+                    />
+                  )
+                })}
+              </div>
+              <div className="pointer-events-none absolute inset-[22px] animate-[pulse_2.4s_ease-in-out_infinite] rounded-full border border-white/15 opacity-40" />
+              <svg className="absolute inset-0 z-10 h-full w-full rotate-[-90deg]" viewBox="0 0 160 160">
+                <circle cx="80" cy="80" r="74" stroke="rgba(255,255,255,0.22)" strokeWidth="3" fill="none" />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="74"
+                  stroke="url(#holdGradient)"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  strokeDasharray={2 * Math.PI * 74}
+                  strokeDashoffset={((100 - holdProgress) / 100) * 2 * Math.PI * 74}
+                  fill="none"
+                />
+                <defs>
+                  <linearGradient id="holdGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stopColor="rgba(255,255,255,0.95)" />
+                    <stop offset="50%" stopColor="rgba(124,51,255,0.9)" />
+                    <stop offset="100%" stopColor="rgba(26,163,255,0.95)" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <div className="pointer-events-none absolute inset-[34px] rounded-full border border-white/10 opacity-20 animate-[spin_18s_linear_infinite_reverse]" />
+            </button>
+
+            <div className="flex flex-col items-center gap-4 text-[11px] uppercase tracking-[0.35em] text-white/65">
+              <span>maintenir pour continuer • relâcher pour réinitialiser</span>
+              <div className="flex items-center gap-4 text-white/75">
+                <span>progress</span>
+                <span>{displayHold.toString().padStart(3, "0")}%</span>
+              </div>
+            </div>
+          </main>
+
+          <footer className="flex flex-col gap-6 text-[11px] uppercase tracking-[0.35em] text-white/65 md:flex-row md:items-center md:justify-between">
+            <div className="flex items-center gap-4">
+              <span>experience 02</span>
+              <div className="h-[2px] w-32 overflow-hidden rounded-full bg-white/20">
+                <div
+                  className="h-full w-full origin-left bg-white transition-transform duration-100"
+                  style={{ transform: `scaleX(${Math.max(displayHold, 2) / 100})` }}
+                />
+              </div>
+            </div>
+            <span className="text-white/50">Débloquez l&apos;univers immersif Pixaura</span>
+          </footer>
+        </div>
+      )}
+    </div>
+  )
+}

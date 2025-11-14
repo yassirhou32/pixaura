@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef, useCallback } from "react"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import Image from "next/image"
@@ -28,6 +28,9 @@ interface ProjectModalProps {
 export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps) {
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [mediaLoaded, setMediaLoaded] = useState(false)
+  const lightboxVideoRef = useRef<HTMLVideoElement>(null)
+  const galleryVideoRefs = useRef<Map<number, HTMLVideoElement>>(new Map())
 
   const galleryImages = project?.gallery ?? (project?.image ? [project.image] : [])
   const galleryLength = galleryImages.length
@@ -35,8 +38,45 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
   useEffect(() => {
     if (project) {
       setCurrentImageIndex(0)
+      setMediaLoaded(false)
     }
   }, [project?.id])
+
+  const handleNext = useCallback(() => {
+    if (galleryLength === 0) return
+    
+    // Pause current video if any
+    if (lightboxVideoRef.current) {
+      lightboxVideoRef.current.pause()
+      lightboxVideoRef.current.currentTime = 0
+    }
+
+    // Immediate transition - no blocking at all
+    setCurrentImageIndex((prev) => (prev + 1) % galleryLength)
+    setMediaLoaded(false)
+    // Set to true after a micro delay to allow render
+    requestAnimationFrame(() => {
+      setMediaLoaded(true)
+    })
+  }, [galleryLength])
+
+  const handlePrevious = useCallback(() => {
+    if (galleryLength === 0) return
+    
+    // Pause current video if any
+    if (lightboxVideoRef.current) {
+      lightboxVideoRef.current.pause()
+      lightboxVideoRef.current.currentTime = 0
+    }
+
+    // Immediate transition - no blocking at all
+    setCurrentImageIndex((prev) => (prev - 1 + galleryLength) % galleryLength)
+    setMediaLoaded(false)
+    // Set to true after a micro delay to allow render
+    requestAnimationFrame(() => {
+      setMediaLoaded(true)
+    })
+  }, [galleryLength])
 
   useEffect(() => {
     if (!lightboxOpen || galleryLength === 0) return
@@ -53,7 +93,58 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
 
     window.addEventListener("keydown", handleKeyDown)
     return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [lightboxOpen, galleryLength])
+  }, [lightboxOpen, galleryLength, handleNext, handlePrevious])
+
+  // Pause all gallery videos when lightbox opens or closes
+  useEffect(() => {
+    if (!lightboxOpen) {
+      galleryVideoRefs.current.forEach((video) => {
+        if (video) {
+          video.pause()
+          video.currentTime = 0
+        }
+      })
+    }
+  }, [lightboxOpen])
+
+  // Handle video transitions in lightbox - optimized for speed
+  useEffect(() => {
+    if (!lightboxOpen || !project) return
+
+    const currentMedia = galleryImages[currentImageIndex] ?? galleryImages[0] ?? project.image ?? ""
+    const isCurrentVideo = currentMedia.endsWith(".mp4") || currentMedia.endsWith(".webm") || currentMedia.endsWith(".mov")
+
+    if (isCurrentVideo && lightboxVideoRef.current) {
+      const video = lightboxVideoRef.current
+      
+      // Reset video quickly
+      video.pause()
+      video.currentTime = 0
+      
+      // Fast load - use loadedmetadata instead of canplay for faster response
+      const handleLoadedMetadata = () => {
+        setMediaLoaded(true)
+      }
+
+      video.addEventListener('loadedmetadata', handleLoadedMetadata, { once: true })
+      video.load()
+
+      return () => {
+        video.removeEventListener('loadedmetadata', handleLoadedMetadata)
+      }
+    } else if (!isCurrentVideo) {
+      // For images, set loaded immediately - no delay
+      setMediaLoaded(true)
+    }
+  }, [currentImageIndex, lightboxOpen, galleryImages, project])
+
+  const openLightbox = useCallback((index: number) => {
+    if (galleryLength === 0) return
+    const safeIndex = Math.max(0, Math.min(index, galleryLength - 1))
+    setCurrentImageIndex(safeIndex)
+    setMediaLoaded(true) // Set to true immediately so navigation works
+    setLightboxOpen(true)
+  }, [galleryLength])
 
   if (!project) return null
 
@@ -62,23 +153,6 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
 
   const photos = galleryImages.filter((media) => !media.endsWith(".mp4") && !media.endsWith(".webm") && !media.endsWith(".mov"))
   const videos = galleryImages.filter((media) => media.endsWith(".mp4") || media.endsWith(".webm") || media.endsWith(".mov"))
-
-  const handleNext = () => {
-    if (galleryLength === 0) return
-    setCurrentImageIndex((prev) => (prev + 1) % galleryLength)
-  }
-
-  const handlePrevious = () => {
-    if (galleryLength === 0) return
-    setCurrentImageIndex((prev) => (prev - 1 + galleryLength) % galleryLength)
-  }
-
-  const openLightbox = (index: number) => {
-    if (galleryLength === 0) return
-    const safeIndex = Math.max(0, Math.min(index, galleryLength - 1))
-    setCurrentImageIndex(safeIndex)
-    setLightboxOpen(true)
-  }
 
   return (
     <>
@@ -234,7 +308,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                            const displayNumber = videoIndex + 1
                            return (
                              <div
-                               key={`video-${videoIndex}`}
+                               key={`video-${globalIndex}`}
                                className="group relative h-48 md:h-56 overflow-hidden rounded-[22px] border border-white/18 bg-white/6 shadow-md shadow-black/30 transition hover:border-white/35 hover:bg-white/12"
                                onClick={() => openLightbox(globalIndex)}
                                onKeyDown={(e) => {
@@ -248,12 +322,28 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                                aria-label={`Voir la vidéo ${videoIndex + 1}`}
                              >
                                <video
+                                 ref={(el) => {
+                                   if (el) {
+                                     galleryVideoRefs.current.set(globalIndex, el)
+                                   } else {
+                                     galleryVideoRefs.current.delete(globalIndex)
+                                   }
+                                 }}
                                  src={media}
                                  className="h-full w-full object-cover brightness-110 saturate-120"
                                  muted
                                  loop
                                  playsInline
-                                 autoPlay
+                                 preload="metadata"
+                                 onMouseEnter={(e) => {
+                                   const video = e.currentTarget
+                                   video.play().catch(() => {})
+                                 }}
+                                 onMouseLeave={(e) => {
+                                   const video = e.currentTarget
+                                   video.pause()
+                                   video.currentTime = 0
+                                 }}
                                />
                                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
                                <div className="absolute inset-0 bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
@@ -333,10 +423,10 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
         </DialogContent>
       </Dialog>
 
-      {/* Lightbox */}
+      {/* Lightbox - Simple and Clean */}
       {lightboxOpen && (
         <div
-          className="fixed inset-0 z-[100] bg-black/98 backdrop-blur-md flex items-center justify-center p-4"
+          className="fixed inset-0 z-[100] bg-black flex items-center justify-center p-4"
           onClick={() => setLightboxOpen(false)}
           onKeyDown={(e) => {
             if (e.key === 'Escape') {
@@ -346,15 +436,15 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
           role="dialog"
           aria-label="Galerie visuelle"
         >
-          {/* Background Glow */}
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-muted/10" />
-          
           <button
-            onClick={() => setLightboxOpen(false)}
-            className="absolute top-6 right-6 z-10 p-3 bg-gradient-to-br from-white/20 via-white/15 to-white/10 hover:from-white/30 hover:via-white/20 hover:to-white/15 rounded-full backdrop-blur-md transition-all duration-300 border-2 border-white/30 hover:border-white/50 shadow-2xl shadow-primary/30 hover:scale-110"
+            onClick={(e) => {
+              e.stopPropagation()
+              setLightboxOpen(false)
+            }}
+            className="absolute top-4 right-4 z-20 p-2 bg-black/60 hover:bg-black/80 rounded-full border border-white/20"
             aria-label="Fermer la galerie"
           >
-            <X className="w-6 h-6 text-white drop-shadow-lg" />
+            <X className="w-5 h-5 text-white" />
           </button>
 
           <div className="relative max-w-7xl max-h-[90vh] w-full h-full flex items-center justify-center">
@@ -362,63 +452,81 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
             {galleryImages.length > 1 && (
               <button
                 onClick={(e) => {
+                  e.preventDefault()
                   e.stopPropagation()
                   handlePrevious()
                 }}
-                className="absolute left-6 z-10 p-4 bg-gradient-to-br from-white/20 via-white/15 to-white/10 hover:from-white/30 hover:via-white/20 hover:to-white/15 rounded-full backdrop-blur-md transition-all duration-300 border-2 border-white/30 hover:border-primary/50 shadow-2xl shadow-primary/30 hover:scale-110"
+                type="button"
+                className="absolute left-4 z-20 p-3 bg-black/60 hover:bg-black/80 rounded-full border border-white/20 cursor-pointer"
                 aria-label="Image précédente"
+                style={{ pointerEvents: 'auto', userSelect: 'none' }}
               >
-                <ChevronLeft className="w-7 h-7 text-white drop-shadow-lg" />
+                <ChevronLeft className="w-5 h-5 text-white pointer-events-none" />
               </button>
             )}
 
-            {/* Image or Video */}
+            {/* Image or Video - Clean and Simple */}
             <div
-              className="relative w-full h-full max-w-6xl max-h-[85vh] rounded-2xl overflow-hidden border-2 border-primary/30 shadow-2xl shadow-primary/30 bg-black/50"
+              className="relative w-full h-full max-w-6xl max-h-[85vh] flex items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
-              {isCurrentVideo ? (
-                <video
-                  src={currentMedia}
-                  className="w-full h-full object-contain brightness-110 saturate-110"
-                  controls
-                  autoPlay
-                  loop
-                  playsInline
-                />
-              ) : (
-                <Image
-                  src={currentMedia}
-                  alt={`${project.title} - Image ${currentImageIndex + 1}`}
-                  fill
-                  className="object-contain brightness-110 saturate-110"
-                  sizes="90vw"
-                  priority
-                />
+              {!mediaLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="h-4 w-4 rounded-full border border-white/40 border-t-white/80 animate-spin" />
+                </div>
               )}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-black/20 pointer-events-none" />
+              
+              <div className="w-full h-full" style={{ opacity: mediaLoaded ? 1 : 0, transition: 'opacity 0.15s' }}>
+                {isCurrentVideo ? (
+                  <video
+                    ref={lightboxVideoRef}
+                    src={currentMedia}
+                    className="w-full h-full object-contain"
+                    controls
+                    loop
+                    playsInline
+                    preload="auto"
+                    onLoadedData={() => setMediaLoaded(true)}
+                    onCanPlay={() => setMediaLoaded(true)}
+                    onError={() => setMediaLoaded(true)}
+                  />
+                ) : (
+                  <Image
+                    src={currentMedia}
+                    alt={`${project.title} - Image ${currentImageIndex + 1}`}
+                    fill
+                    className="object-contain"
+                    sizes="90vw"
+                    priority
+                    loading="eager"
+                    onLoad={() => setMediaLoaded(true)}
+                    onError={() => setMediaLoaded(true)}
+                  />
+                )}
+              </div>
             </div>
 
             {/* Next Button */}
             {galleryImages.length > 1 && (
               <button
                 onClick={(e) => {
+                  e.preventDefault()
                   e.stopPropagation()
                   handleNext()
                 }}
-                className="absolute right-6 z-10 p-4 bg-gradient-to-br from-white/20 via-white/15 to-white/10 hover:from-white/30 hover:via-white/20 hover:to-white/15 rounded-full backdrop-blur-md transition-all duration-300 border-2 border-white/30 hover:border-primary/50 shadow-2xl shadow-primary/30 hover:scale-110"
+                type="button"
+                className="absolute right-4 z-20 p-3 bg-black/60 hover:bg-black/80 rounded-full border border-white/20 cursor-pointer"
                 aria-label="Image suivante"
+                style={{ pointerEvents: 'auto', userSelect: 'none' }}
               >
-                <ChevronRight className="w-7 h-7 text-white drop-shadow-lg" />
+                <ChevronRight className="w-5 h-5 text-white pointer-events-none" />
               </button>
             )}
 
-            {/* Image Counter */}
+            {/* Simple Counter */}
             {galleryImages.length > 1 && (
-              <div className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 px-6 py-3 bg-gradient-to-br from-white/20 via-white/15 to-white/10 backdrop-blur-md rounded-full text-white text-base font-black border-2 border-white/30 shadow-2xl shadow-primary/30">
-                <span className="bg-gradient-to-r from-primary via-cyan-400 to-muted bg-clip-text text-transparent">{currentImageIndex + 1}</span>
-                <span className="text-white/70 mx-2">/</span>
-                <span className="text-white/90">{galleryImages.length}</span>
+              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20 px-4 py-2 bg-black/60 rounded-full text-white text-sm font-medium border border-white/20">
+                {currentImageIndex + 1} / {galleryImages.length}
               </div>
             )}
           </div>
