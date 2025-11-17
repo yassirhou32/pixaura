@@ -5,114 +5,116 @@ import Image from "next/image"
 import { Factory, Sparkles, BarChart3, Check, ArrowRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
 import { OffreModal } from "@/components/offre-modal"
-
-const differentiatorDetails = {
-  production: {
-    title: "Production intégrée",
-    subtitle: "Studio interne = maîtrise qualité et délais",
-    image: "/Banque d_images/Copie de M7_00487.jpg",
-    intro: "Chez Pixaura_IT, la production est totalement intégrée : studio photo, tournage vidéo, montage et post-production sont gérés en interne.",
-    points: [
-      "Une cohérence visuelle entre tous les contenus produits (photo, vidéo, social).",
-      "Une maîtrise totale des délais et de la qualité, sans sous-traitance.",
-      "Des shootings réguliers adaptés au calendrier éditorial de chaque client.",
-      "Des contenus optimisés pour les différents formats digitaux (reels, ads, bannières, etc.)."
-    ],
-    conclusion: "Le studio interne permet à Pixaura_IT de produire plus vite, avec plus de contrôle et de créativité, tout en conservant une signature esthétique forte.",
-    gradient: "from-blue-500 via-cyan-400 to-blue-600",
-    glow: "rgba(59, 130, 246, 0.4)",
-    iconBg: "from-blue-500/20 to-cyan-500/20"
-  },
-  creativite: {
-    title: "Créativité stratégique",
-    subtitle: "Storytelling + direction artistique + performance",
-    image: "/Banque d_images/art1.jpg",
-    intro: "L'équipe créative de Pixaura_IT fusionne la stratégie marketing et la création artistique. Chaque contenu est pensé comme un mini-film publicitaire, au service d'un objectif clair : émouvoir, convertir et fidéliser.",
-    points: [
-      "Le storytelling de marque, pour révéler l'ADN et les valeurs de chaque client.",
-      "La direction artistique, qui définit les palettes, typographies et styles visuels cohérents.",
-      "L'optimisation stratégique, pour que chaque publication atteigne ses KPIs (clics, engagement, leads)."
-    ],
-    conclusion: "L'émotion guide la création, la stratégie en assure l'efficacité.",
-    gradient: "from-purple-500 via-pink-400 to-purple-600",
-    glow: "rgba(168, 85, 247, 0.4)",
-    iconBg: "from-purple-500/20 to-pink-500/20"
-  },
-  suivi: {
-    title: "Suivi mesurable",
-    subtitle: "Reporting, KPI, ROI",
-    image: "/Banque d_images/Copie de M7_03194.jpg",
-    intro: "Pixaura_IT place la donnée au cœur de la performance. Chaque campagne fait l'objet d'un reporting régulier, accompagné d'une analyse claire et visuelle des indicateurs :",
-    points: [
-      "Taux d'engagement, portée, clics, conversions",
-      "ROI publicitaire (ROAS) et évolution du trafic qualifié",
-      "Recommandations d'optimisation continue"
-    ],
-    conclusion: "Ces analyses sont présentées via des tableaux de bord intuitifs et partagées lors des points de suivi. Objectif : prouver la valeur de chaque action, ajuster en temps réel et maximiser la rentabilité marketing.",
-    gradient: "from-emerald-500 via-teal-400 to-emerald-600",
-    glow: "rgba(16, 185, 129, 0.4)",
-    iconBg: "from-emerald-500/20 to-teal-500/20"
-  }
-}
-
-const packs = [
-  {
-    name: "Starter",
-    price: "1 499 € puis 11 × 375 €",
-    priceDetail: "5 999 € TTC/an",
-    description: "Idéal pour lancer une dynamique de contenus réguliers, calibrés pour vos réseaux prioritaires.",
-    image: "/Banque d_images/Copie de M7_00487.jpg",
-    features: [
-      "Production vidéo/photo mensuelle",
-      "Stratégie éditoriale et calendrier",
-      "Montage vertical + pack stories",
-      "Reporting consolidé"
-    ],
-    gradient: "from-blue-500 via-cyan-400 to-blue-600",
-    glow: "rgba(59, 130, 246, 0.3)",
-    accent: "blue",
-    badge: "Starter"
-  },
-  {
-    name: "Croissance",
-    price: "Sur devis",
-    priceDetail: "À partir de 9 000 € HT / an",
-    description: "Un accompagnement 360° pour accélérer l'impact : plus de contenus, paid media et pilotage data.",
-    image: "/Banque d_images/art1.jpg",
-    features: [
-      "2 à 3 tournages/mois + capsules studio",
-      "Gestion social media & paid",
-      "Activation influence & newsletters",
-      "Workshop trimestriel performance"
-    ],
-    gradient: "from-purple-500 via-pink-400 to-purple-600",
-    glow: "rgba(168, 85, 247, 0.3)",
-    accent: "purple",
-    badge: "Croissance"
-  },
-  {
-    name: "Signature",
-    price: "Sur devis",
-    priceDetail: "> 15 000 € HT / an",
-    description: "Marques premium ou internationales cherchant un accompagnement complet",
-    image: "/Banque d_images/Copie de M7_03194.jpg",
-    features: [
-      "Direction artistique complète",
-      "Production audiovisuelle premium",
-      "Campagnes cross-plateformes",
-      "Intégration format Humind",
-      "Stratégie trimestrielle pilotée",
-      "Reporting avancé + support prioritaire"
-    ],
-    gradient: "from-amber-500 via-yellow-400 to-amber-600",
-    glow: "rgba(245, 158, 11, 0.3)",
-    accent: "amber",
-    premium: true,
-    badge: "Premium"
-  }
-]
+import { useTranslation } from "@/contexts/translation-context"
 
 export function OffreSection() {
+  const { t } = useTranslation()
+  
+  const differentiatorDetails = {
+    production: {
+      title: t("offreHome.productionTitle"),
+      subtitle: t("offreHome.productionSubtitle"),
+      image: "/Banque d_images/Copie de M7_00487.jpg",
+      intro: t("offreHome.productionIntro"),
+      points: [
+        t("offreHome.productionPoint1"),
+        t("offreHome.productionPoint2"),
+        t("offreHome.productionPoint3"),
+        t("offreHome.productionPoint4")
+      ],
+      conclusion: t("offreHome.productionConclusion"),
+      gradient: "from-blue-500 via-cyan-400 to-blue-600",
+      glow: "rgba(59, 130, 246, 0.4)",
+      iconBg: "from-blue-500/20 to-cyan-500/20"
+    },
+    creativite: {
+      title: t("offreHome.creativityTitle"),
+      subtitle: t("offreHome.creativitySubtitle"),
+      image: "/Banque d_images/art1.jpg",
+      intro: t("offreHome.creativityIntro"),
+      points: [
+        t("offreHome.creativityPoint1"),
+        t("offreHome.creativityPoint2"),
+        t("offreHome.creativityPoint3")
+      ],
+      conclusion: t("offreHome.creativityConclusion"),
+      gradient: "from-purple-500 via-pink-400 to-purple-600",
+      glow: "rgba(168, 85, 247, 0.4)",
+      iconBg: "from-purple-500/20 to-pink-500/20"
+    },
+    suivi: {
+      title: t("offreHome.suiviTitle"),
+      subtitle: t("offreHome.suiviSubtitle"),
+      image: "/Banque d_images/Copie de M7_03194.jpg",
+      intro: t("offreHome.suiviIntro"),
+      points: [
+        t("offreHome.suiviPoint1"),
+        t("offreHome.suiviPoint2"),
+        t("offreHome.suiviPoint3")
+      ],
+      conclusion: t("offreHome.suiviConclusion"),
+      gradient: "from-emerald-500 via-teal-400 to-emerald-600",
+      glow: "rgba(16, 185, 129, 0.4)",
+      iconBg: "from-emerald-500/20 to-teal-500/20"
+    }
+  }
+
+  const packs = [
+    {
+      name: t("offreHome.starterName"),
+      price: t("offreHome.starterPrice"),
+      priceDetail: t("offreHome.starterPriceDetail"),
+      description: t("offreHome.starterDesc"),
+      image: "/Banque d_images/Copie de M7_00487.jpg",
+      features: [
+        t("offreHome.starterFeature1"),
+        t("offreHome.starterFeature2"),
+        t("offreHome.starterFeature3"),
+        t("offreHome.starterFeature4"),
+      ],
+      gradient: "from-blue-500 via-cyan-400 to-blue-600",
+      glow: "rgba(59, 130, 246, 0.3)",
+      accent: "blue",
+      badge: t("offreHome.starterName")
+    },
+    {
+      name: t("offreHome.croissanceName"),
+      price: t("offreHome.croissancePrice"),
+      priceDetail: t("offreHome.croissancePriceDetail"),
+      description: t("offreHome.croissanceDesc"),
+      image: "/Banque d_images/art1.jpg",
+      features: [
+        t("offreHome.croissanceFeature1"),
+        t("offreHome.croissanceFeature2"),
+        t("offreHome.croissanceFeature3"),
+        t("offreHome.croissanceFeature4"),
+      ],
+      gradient: "from-purple-500 via-pink-400 to-purple-600",
+      glow: "rgba(168, 85, 247, 0.3)",
+      accent: "purple",
+      badge: t("offreHome.croissanceName")
+    },
+    {
+      name: t("offreHome.signatureName"),
+      price: t("offreHome.signaturePrice"),
+      priceDetail: t("offreHome.signaturePriceDetail"),
+      description: t("offreHome.signatureDesc"),
+      image: "/Banque d_images/Copie de M7_03194.jpg",
+      features: [
+        t("offreHome.signatureFeature1"),
+        t("offreHome.signatureFeature2"),
+        t("offreHome.signatureFeature3"),
+        t("offreHome.signatureFeature4"),
+        t("offreHome.signatureFeature5"),
+        t("offreHome.signatureFeature6"),
+      ],
+      gradient: "from-amber-500 via-yellow-400 to-amber-600",
+      glow: "rgba(245, 158, 11, 0.3)",
+      accent: "amber",
+      premium: true,
+      badge: t("offreHome.premium")
+    }
+  ]
   const [mounted, setMounted] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [selectedOffre, setSelectedOffre] = useState<string | null>(null)
@@ -162,13 +164,13 @@ export function OffreSection() {
           <div className="mb-16 text-left">
             <span className="inline-flex w-fit items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.5em] text-white shadow-[0_0_35px_rgba(89,129,255,0.25)] backdrop-blur-md">
               <Sparkles className="h-3.5 w-3.5 text-sky-300" />
-              Notre offre
+              {t("offreHome.badge")}
             </span>
             <h2 className="mt-8 text-4xl font-black leading-tight text-white md:text-5xl lg:text-6xl text-left">
-              Trois piliers qui font la différence
+              {t("offreHome.title")}
             </h2>
             <p className="mt-6 max-w-3xl text-base text-white/70 md:text-lg text-left">
-              Une approche intégrée qui combine production, créativité stratégique et suivi mesurable pour maximiser votre impact.
+              {t("offreHome.description")}
             </p>
           </div>
         </Reveal>
@@ -176,9 +178,9 @@ export function OffreSection() {
         {/* Premium Design Cards - Style Réalisations */}
         <div className="mb-24 grid gap-8 md:grid-cols-3">
           {[
-            { key: "production", icon: Factory, badge: "Production" },
-            { key: "creativite", icon: Sparkles, badge: "Créativité" },
-            { key: "suivi", icon: BarChart3, badge: "Analytics" }
+            { key: "production", icon: Factory, badge: t("offreHome.productionBadge") },
+            { key: "creativite", icon: Sparkles, badge: t("offreHome.creativityBadge") },
+            { key: "suivi", icon: BarChart3, badge: t("offreHome.analyticsBadge") }
           ].map(({ key, icon: Icon, badge }) => {
             const detail = differentiatorDetails[key as keyof typeof differentiatorDetails]
 
@@ -249,7 +251,7 @@ export function OffreSection() {
                       <div className="flex items-center gap-4 pt-2 border-t border-white/10">
                         <span className="flex-1 h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
                         <span className="inline-flex items-center gap-2.5 text-xs font-bold uppercase tracking-[0.3em] text-white/90 transition-all duration-300 group-hover:text-white group-hover:gap-3">
-                          Voir les détails
+                          {t("offreHome.seeDetails")}
                           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                         </span>
                         <span className="flex-1 h-px bg-gradient-to-l from-transparent via-white/20 to-transparent" />
@@ -275,10 +277,10 @@ export function OffreSection() {
         <Reveal>
           <div className="mb-12 text-center">
             <h2 className="text-4xl font-black leading-tight text-white md:text-5xl lg:text-6xl">
-              Trois packs sur mesure
+              {t("offreHome.packsTitle")}
             </h2>
             <p className="mx-auto mt-6 max-w-3xl text-base text-white/70 md:text-lg">
-              Des solutions adaptées à votre ambition, avec un engagement de 12 mois pour garantir des résultats mesurables.
+              {t("offreHome.packsDesc")}
             </p>
           </div>
         </Reveal>
@@ -317,7 +319,7 @@ export function OffreSection() {
                     {/* Premium indicator for Signature pack */}
                     {pack.premium && (
                       <span className="rounded-full border-2 border-amber-400/50 bg-amber-500/20 px-3 py-1.5 text-[9px] font-black uppercase tracking-[0.3em] text-white backdrop-blur-md shadow-lg">
-                        Premium
+                        {t("offreHome.premium")}
                       </span>
                     )}
                   </div>

@@ -5,33 +5,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, Play } from "lucide-react"
 import { Reveal } from "@/components/reveal"
-
-const headlineVariants = [
-  (
-    <>
-      l&apos;aura des marques <span className="hero-highlight">ambitieuses</span> sur chaque continent.
-    </>
-  ),
-  (
-    <>
-      <span className="block">idées</span>
-      <span className="block">audacieuses</span>
-      <span className="block">impact global</span>
-      <span className="block">
-        <span className="hero-highlight">rayonne</span> pour
-      </span>
-      <span className="block">chaque marque.</span>
-    </>
-  ),
-  (
-    <>
-      des activations créatives <span className="hero-highlight">haute performance</span> pour amplifier l&apos;impact.
-    </>
-  ),
-]
-
-const subHeadline =
-  "Agence créative française aux ambitions globales, nous sculptons des expériences audiovisuelles et digitales premium pour les marques qui veulent rayonner dans le monde entier."
+import { useTranslation } from "@/contexts/translation-context"
 
 const heroProjects = [
   {
@@ -74,9 +48,34 @@ const getNodeText = (node: ReactNode): string => {
 }
 
 export function HeroSection() {
+  const { t } = useTranslation()
   const [activeIndex, setActiveIndex] = useState(0)
   const [previousIndex, setPreviousIndex] = useState<number | null>(null)
   const [isAnimating, setIsAnimating] = useState(false)
+
+  const headlineVariants = useMemo(() => [
+    (
+      <>
+        {t("hero.headline1")} <span className="hero-highlight">{t("hero.headline1Highlight")}</span> {t("hero.headline1End")}
+      </>
+    ),
+    (
+      <>
+        <span className="block">{t("hero.headline2Line1")}</span>
+        <span className="block">{t("hero.headline2Line2")}</span>
+        <span className="block">{t("hero.headline2Line3")}</span>
+        <span className="block">
+          <span className="hero-highlight">{t("hero.headline2Line4")}</span> {t("hero.headline2Line5")}
+        </span>
+        <span className="block">{t("hero.headline2Line6")}</span>
+      </>
+    ),
+    (
+      <>
+        {t("hero.headline3")} <span className="hero-highlight">{t("hero.headline3Highlight")}</span> {t("hero.headline3End")}
+      </>
+    ),
+  ], [t])
 
   const longestHeadlineIndex = useMemo(() => {
     let longest = 0
@@ -89,7 +88,7 @@ export function HeroSection() {
       }
     })
     return longest
-  }, [])
+  }, [headlineVariants])
 
   const placeholderRef = useRef<HTMLDivElement>(null)
   const [placeholderHeight, setPlaceholderHeight] = useState<number>()
@@ -133,19 +132,19 @@ export function HeroSection() {
   return (
     <section className="relative flex min-h-screen w-full items-center justify-center overflow-hidden">
 
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-12 px-6 pt-36 pb-24 md:px-12 lg:gap-16 xl:max-w-7xl">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-col gap-12 px-4 pt-32 pb-20 sm:px-6 sm:pt-36 sm:pb-24 md:px-12 lg:gap-16 xl:max-w-7xl">
         <div className="grid gap-14 text-white lg:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] lg:gap-10 xl:gap-14">
-          <div className="flex flex-col gap-12">
-            <div className="space-y-6">
+          <div className="flex flex-col gap-12 relative z-10">
+            <div>
               <Reveal delay={100}>
-                <div className="relative max-w-4xl">
-                  <span className="absolute -left-6 top-2 h-14 w-14 rounded-full bg-[radial-gradient(circle,_rgba(87,140,255,0.35),_rgba(0,0,0,0)_70%)] blur-xl" />
+                <div className="relative max-w-4xl z-20">
+                  <span className="absolute -left-4 top-2 h-10 w-10 rounded-full bg-[radial-gradient(circle,_rgba(87,140,255,0.35),_rgba(0,0,0,0)_70%)] blur-xl z-0 sm:-left-6 sm:h-14 sm:w-14" />
                   <div className="flex flex-col gap-2 md:gap-3">
-                    <span className="text-lg font-semibold uppercase tracking-[0.4em] text-white/70 md:text-xl">
-                      Nous révélons
+                    <span className="text-base font-semibold uppercase tracking-[0.4em] text-white/70 sm:text-lg md:text-xl">
+                      {t("hero.reveal")}
                     </span>
                     <div
-                      className="hero-headline-container text-[36px] font-black leading-[1.04] tracking-tight text-white md:text-[56px] lg:text-[72px]"
+                      className={`hero-headline-container text-[28px] font-black leading-[1.1] tracking-tight text-white sm:text-[36px] sm:leading-[1.08] md:text-[56px] md:leading-[1.05] lg:text-[72px] lg:leading-[1.04] ${activeIndex === 1 ? 'pb-10 sm:pb-0' : 'pb-2 sm:pb-0'}`}
                       aria-live="polite"
                       style={placeholderHeight ? { minHeight: placeholderHeight } : undefined}
                     >
@@ -167,7 +166,7 @@ export function HeroSection() {
               </Reveal>
 
               <Reveal delay={240}>
-                <p className="max-w-2xl text-base text-white/80 md:text-lg lg:text-xl">{subHeadline}</p>
+                <p className={`max-w-2xl text-sm text-white/80 sm:text-base md:text-lg lg:text-xl relative z-10 leading-relaxed ${activeIndex === 1 ? 'mt-10 sm:mt-4 md:mt-5 lg:mt-6' : 'mt-4 sm:mt-4 md:mt-5 lg:mt-6'}`}>{t("hero.subheadline")}</p>
               </Reveal>
             </div>
 
@@ -178,45 +177,45 @@ export function HeroSection() {
                     href="/realisations"
                     className="group inline-flex items-center gap-3 rounded-full border border-white/25 px-9 py-4 text-sm font-semibold uppercase tracking-[0.32em] text-white transition-all duration-500 hover:border-white hover:bg-white/10"
                   >
-                    Voir nos réalisations
+                    {t("hero.viewPortfolio")}
                     <Play className="h-4 w-4 transition-transform duration-500 group-hover:scale-110" />
                   </Link>
                 </div>
 
                 <div className="lg:hidden">
-                  <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2">
+                  <div className="flex flex-col gap-4 w-full">
                     {heroProjects.map((project, index) => (
                       <Reveal
                         key={project.id}
                         delay={index * 140}
-                      className="hero-highlight-card group relative isolate flex h-[330px] min-w-[200px] max-w-[210px] snap-start flex-col overflow-hidden rounded-[24px] border border-white/15 bg-white/5 pb-5 text-white backdrop-blur-xl transition duration-700 hover:-translate-y-2 hover:border-white/30 hover:bg-white/10 sm:h-[350px] sm:min-w-[210px] sm:max-w-[220px]"
+                        className="hero-highlight-card group relative isolate flex w-full flex-col overflow-hidden rounded-[24px] border border-white/15 bg-white/5 pb-5 text-white backdrop-blur-xl transition duration-700 hover:-translate-y-2 hover:border-white/30 hover:bg-white/10"
                       >
-                      <div className="relative h-[58%] w-full overflow-hidden">
+                        <div className="relative h-[200px] w-full overflow-hidden sm:h-[240px]">
                           <Image
                             src={project.image}
                             alt={project.title}
                             fill
                             className="object-cover transition duration-700 ease-out group-hover:scale-[1.05]"
-                            sizes="220px"
+                            sizes="100vw"
                           />
                           <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/80" />
                           <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2 px-5 pb-4">
-                            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-white/70">
+                            <span className="text-[10px] font-semibold uppercase tracking-[0.4em] text-white/70 sm:text-xs">
                               {project.client}
                             </span>
-                            <span className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/55">
+                            <span className="text-[11px] font-semibold uppercase tracking-[0.35em] text-white/55 sm:text-xs">
                               {project.category}
                             </span>
                           </div>
                         </div>
 
-                      <div className="flex flex-1 flex-col justify-between px-5 pt-5">
-                          <h3 className="text-sm font-semibold leading-snug text-white">{project.title}</h3>
-                          <div className="mt-4 flex items-center gap-4 text-[10px] uppercase tracking-[0.28em] text-white/50">
+                        <div className="flex flex-1 flex-col justify-between px-5 pt-5">
+                          <h3 className="text-base font-semibold leading-snug text-white sm:text-lg">{project.title}</h3>
+                          <div className="mt-4 flex items-center gap-4 text-[10px] uppercase tracking-[0.28em] text-white/50 sm:text-xs">
                             <span className="h-px flex-1 bg-white/20" />
-                            <Link href="/realisations" className="inline-flex items-center gap-2 text-white transition hover:text-white/70">
-                              Explorer
-                              <ArrowRight className="h-3 w-3" />
+                            <Link href="/realisations" className="inline-flex items-center gap-2 text-white transition hover:text-white/70 active:scale-95">
+                              {t("hero.explore")}
+                              <ArrowRight className="h-3 w-3 sm:h-4 sm:w-4" />
                             </Link>
                           </div>
                         </div>

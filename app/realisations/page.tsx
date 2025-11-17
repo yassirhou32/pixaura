@@ -9,8 +9,9 @@ import { Footer } from "@/components/footer"
 import { Palette, Car, Building2, Dumbbell, UtensilsCrossed, Briefcase, Users, ArrowRight } from "lucide-react"
 import { SectionDivider } from "@/components/section-divider"
 import { Reveal } from "@/components/reveal"
+import { useTranslation } from "@/contexts/translation-context"
 
-// Types de projets
+// Types de projets - will be translated in component
 const formatFilters = ["Branding"]
 const sectorFilters = ["Tous", "Automobile", "Immobilier", "Sport & Bien-être", "Restauration", "Artistes & Créateurs"]
 
@@ -187,50 +188,106 @@ const sectorIcons: Record<string, JSX.Element> = {
 }
 
 export default function RealisationsPage() {
-  const [activeFilter, setActiveFilter] = useState<"Tous" | string>("Tous")
+  const { t } = useTranslation()
+  
+          // Get translated projects
+          const translatedProjects = useMemo(() => {
+            return projects.map((project) => ({
+              ...project,
+              category: project.category === "Film / Vidéo" ? t("portfolio.categoryFilmVideo") : 
+                       project.category === "Photo" ? t("portfolio.categoryPhoto") : project.category,
+              formats: project.formats.map((format) => 
+                format === "Film / Vidéo" ? t("portfolio.categoryFilmVideo") :
+                format === "Photo" ? t("portfolio.categoryPhoto") :
+                format === "Social" ? t("portfolio.tagSocial") :
+                format === "Event" ? t("portfolio.tagEvent") :
+                format === "Branding" ? t("portfolio.tagBranding") :
+                format === "Corporate" ? t("portfolio.tagCorporate") :
+                format === "Design" ? t("portfolio.tagDesign") :
+                format === "Podcast" ? t("portfolio.tagPodcast") : format
+              ),
+              sector: project.sector === "Automobile" ? t("realisationsPage.filterAutomobile") :
+                     project.sector === "Immobilier" ? t("realisationsPage.filterRealEstate") :
+                     project.sector === "Sport & Bien-être" ? t("realisationsPage.filterSport") :
+                     project.sector === "Restauration" ? t("realisationsPage.filterRestaurant") :
+                     project.sector === "Artistes & Créateurs" ? t("realisationsPage.filterArtists") : project.sector,
+              objective: t(`projects.project${project.id}.objective`),
+              creativeIdea: t(`projects.project${project.id}.creativeIdea`),
+              device: t(`projects.project${project.id}.device`),
+              results: t(`projects.project${project.id}.results`),
+            }))
+          }, [t])
+  
+  const [activeFilter, setActiveFilter] = useState<string>(t("realisationsPage.filterAll"))
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [selectedProject, setSelectedProject] = useState<typeof projects[0] | null>(null)
+  const [selectedProject, setSelectedProject] = useState<typeof translatedProjects[0] | null>(null)
   const [isSticky, setIsSticky] = useState(false)
   const filtersRef = useRef<HTMLDivElement>(null)
 
   // Filter projects based on active filter (only one filter can be active at a time)
   const filteredProjects = useMemo(() => {
-    if (activeFilter === "Tous") {
-      return projects
+    if (activeFilter === t("realisationsPage.filterAll")) {
+      return translatedProjects
+    }
+    
+    // Map translated filters back to original
+    const sectorMap: Record<string, string> = {
+      [t("realisationsPage.filterAutomobile")]: "Automobile",
+      [t("realisationsPage.filterRealEstate")]: "Immobilier",
+      [t("realisationsPage.filterSport")]: "Sport & Bien-être",
+      [t("realisationsPage.filterRestaurant")]: "Restauration",
+      [t("realisationsPage.filterArtists")]: "Artistes & Créateurs",
+    }
+    const formatMap: Record<string, string> = {
+      [t("realisationsPage.filterBranding")]: "Branding",
     }
     
     // Check if it's a format filter
-    if (formatFilters.includes(activeFilter)) {
-      return projects.filter((project) => project.formats.includes(activeFilter))
+    const originalFormat = formatMap[activeFilter]
+    if (originalFormat && formatFilters.includes(originalFormat)) {
+      return translatedProjects.filter((project) => project.formats.includes(originalFormat))
     }
     
     // Otherwise it's a sector filter
-    return projects.filter((project) => project.sector === activeFilter)
-  }, [activeFilter])
+    const originalSector = sectorMap[activeFilter]
+    if (originalSector) {
+      return translatedProjects.filter((project) => project.sector === originalSector)
+    }
+    
+    return translatedProjects
+  }, [activeFilter, t, translatedProjects])
 
   // Calculate counts for each filter
   const filterCounts = useMemo(() => {
     const counts: Record<string, number> = {}
     
     // Count for "Tous"
-    counts["Tous"] = projects.length
+    counts[t("realisationsPage.filterAll")] = translatedProjects.length
     
     // Count for format filters
-    formatFilters.forEach((format) => {
-      counts[format] = projects.filter((p) => p.formats.includes(format)).length
+    const formatMap: Record<string, string> = {
+      [t("realisationsPage.filterBranding")]: "Branding",
+    }
+    Object.entries(formatMap).forEach(([translated, original]) => {
+      counts[translated] = translatedProjects.filter((p) => p.formats.includes(original)).length
     })
     
     // Count for sector filters
-    sectorFilters.forEach((sector) => {
-      if (sector !== "Tous") {
-        counts[sector] = projects.filter((p) => p.sector === sector).length
-      }
+    const sectorMap: Record<string, string> = {
+      [t("realisationsPage.filterAutomobile")]: "Automobile",
+      [t("realisationsPage.filterRealEstate")]: "Immobilier",
+      [t("realisationsPage.filterSport")]: "Sport & Bien-être",
+      [t("realisationsPage.filterRestaurant")]: "Restauration",
+      [t("realisationsPage.filterArtists")]: "Artistes & Créateurs",
+    }
+    Object.entries(sectorMap).forEach(([translated, original]) => {
+      counts[translated] = translatedProjects.filter((p) => p.sector === original).length
     })
     
     return counts
-  }, [])
+  }, [t, translatedProjects])
 
-  const handleProjectClick = (project: typeof projects[0]) => {
+  const handleProjectClick = (project: typeof translatedProjects[0]) => {
     setSelectedProject(project)
     setIsModalOpen(true)
   }
@@ -303,18 +360,18 @@ export default function RealisationsPage() {
             <div className="relative mx-auto flex max-w-4xl flex-col items-center gap-6">
               <span className="relative inline-flex items-center gap-3 rounded-full border border-white/30 bg-gradient-to-br from-white/15 via-white/10 to-white/5 px-6 py-2.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,115,255,0.15)]">
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-transparent to-cyan-400/20 opacity-50 blur-xl" />
-                <span className="relative z-10">Nos réalisations</span>
+                <span className="relative z-10">{t("realisationsPage.badge")}</span>
               </span>
               <h1 className="text-4xl font-black leading-tight md:text-5xl relative" style={{ fontFamily: "Montserrat, sans-serif" }}>
                 <span className="relative z-10">
-                  Films, shootings et campagnes qui{' '}
+                  {t("realisationsPage.title1")}{' '}
                   <span className="relative inline-block">
                     <span className="absolute inset-0 bg-gradient-to-r from-primary/40 via-cyan-400/40 to-primary/40 blur-2xl opacity-60" />
                     <span className="relative bg-gradient-to-r from-white via-primary/90 to-white bg-clip-text text-transparent">
-                      amplifient l'aura
+                      {t("realisationsPage.title2")}
                     </span>
                   </span>
-                  {' '}des marques.
+                  {' '}{t("realisationsPage.title3")}
                 </span>
               </h1>
               <p className="text-sm text-white/80 md:text-base leading-relaxed max-w-2xl">
@@ -323,15 +380,15 @@ export default function RealisationsPage() {
               <div className="mt-6 flex flex-wrap justify-center gap-3 text-xs uppercase tracking-[0.28em]">
                 <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(0,115,255,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(0,115,255,0.2)]">
                   <span className="h-2 w-2 rounded-full bg-gradient-to-br from-primary/90 to-primary/70 shadow-[0_0_8px_rgba(0,115,255,0.6)]" />
-                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Film & Vidéo</span>
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">{t("realisationsPage.filterFilmVideo")}</span>
                 </div>
                 <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(52,211,153,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(52,211,153,0.2)]">
                   <span className="h-2 w-2 rounded-full bg-gradient-to-br from-cyan-400/90 to-cyan-400/70 shadow-[0_0_8px_rgba(52,211,153,0.6)]" />
-                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Photo</span>
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">{t("realisationsPage.filterPhoto")}</span>
                 </div>
                 <div className="group relative inline-flex items-center gap-2 rounded-full border border-white/25 bg-gradient-to-br from-white/12 via-white/8 to-white/5 px-5 py-2.5 backdrop-blur-xl shadow-[0_4px_20px_rgba(255,255,255,0.1)] transition-all duration-300 hover:border-white/40 hover:bg-white/15 hover:shadow-[0_8px_30px_rgba(255,255,255,0.2)]">
                   <span className="h-2 w-2 rounded-full bg-gradient-to-br from-white/90 to-white/70 shadow-[0_0_8px_rgba(255,255,255,0.4)]" />
-                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">Activation</span>
+                  <span className="text-white/80 group-hover:text-white transition-colors duration-300">{t("realisationsPage.filterActivation")}</span>
                 </div>
               </div>
             </div>
@@ -340,19 +397,23 @@ export default function RealisationsPage() {
           {/* Sticky Filters Section - Premium Design */}
           <div
             ref={filtersRef}
-            className={`mb-12 space-y-6 transition-all duration-300 overflow-visible ${
+            className={`mb-12 space-y-6 transition-all duration-300 ${
               isSticky
                 ? "sticky top-0 z-30 py-3"
                 : ""
             }`}
           >
             {/* All Filters Combined in One Line - Ultra Premium Design */}
-            <div className="relative flex flex-nowrap gap-2.5 justify-center overflow-visible pb-2 px-0 scrollbar-hide" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+            {/* Mobile: horizontal scroll, Desktop: centered */}
+            <div
+              className="relative -mx-4 px-4 flex flex-nowrap gap-2.5 justify-start md:justify-center overflow-x-auto overflow-y-visible pb-2 scrollbar-hide"
+              style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+            >
                 {/* Tous Button */}
                 <button
-                  onClick={() => setActiveFilter("Tous")}
+                  onClick={() => setActiveFilter(t("realisationsPage.filterAll"))}
                   className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
-                    activeFilter === "Tous"
+                    activeFilter === t("realisationsPage.filterAll")
                       ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
                       : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
                   }`}
@@ -363,33 +424,35 @@ export default function RealisationsPage() {
                   }}
                 >
                   
-                  <span className={`relative z-10 transition-all duration-300 ${activeFilter === "Tous" ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
+                  <span className={`relative z-10 transition-all duration-300 ${activeFilter === t("realisationsPage.filterAll") ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
                     <Briefcase className="w-3.5 h-3.5" />
                   </span>
-                  <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${activeFilter !== "Tous" ? "group-hover:tracking-wider" : ""}`}>Tous</span>
+                  <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${activeFilter !== t("realisationsPage.filterAll") ? "group-hover:tracking-wider" : ""}`}>{t("realisationsPage.filterAll")}</span>
                   <span className={`relative z-10 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all duration-300 min-w-[18px] flex items-center justify-center ${
-                    activeFilter === "Tous"
+                    activeFilter === t("realisationsPage.filterAll")
                       ? "bg-white/25 text-white shadow-sm"
                       : "bg-white/10 text-white/60 group-hover:bg-white/20 group-hover:text-white/90 group-hover:scale-110"
                   }`}>
-                    {filterCounts["Tous"]}
+                    {filterCounts[t("realisationsPage.filterAll")]}
                   </span>
                 </button>
                 
                 {/* Format Filters */}
-                {formatFilters.map((format) => {
-                  const isActive = activeFilter === format
-                  const count = filterCounts[format]
+                {[
+                  { original: "Branding", translated: t("realisationsPage.filterBranding"), icon: formatIcons["Branding"] }
+                ].map(({ original, translated, icon }) => {
+                  const isActive = activeFilter === translated
+                  const count = filterCounts[translated] || 0
                   return (
                     <button
-                      key={`format-${format}`}
-                      onClick={() => setActiveFilter(format)}
+                      key={`format-${original}`}
+                      onClick={() => setActiveFilter(translated)}
                       className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
                         isActive
                           ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
                           : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
                       }`}
-                      aria-label={`Filtrer par ${format}`}
+                      aria-label={`Filtrer par ${translated}`}
                       style={{
                         fontFamily: 'Montserrat, sans-serif',
                         letterSpacing: '0.01em',
@@ -397,9 +460,9 @@ export default function RealisationsPage() {
                     >
                       
                       <span className={`relative z-10 transition-all duration-300 ${isActive ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
-                        {formatIcons[format]}
+                        {icon}
                       </span>
-                      <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${!isActive ? "group-hover:tracking-wider" : ""}`}>{format}</span>
+                      <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${!isActive ? "group-hover:tracking-wider" : ""}`}>{translated}</span>
                       <span className={`relative z-10 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all duration-300 min-w-[18px] flex items-center justify-center ${
                         isActive
                           ? "bg-white/25 text-white shadow-sm"
@@ -411,20 +474,26 @@ export default function RealisationsPage() {
                   )
                 })}
                 
-                {/* Sector Filters - excluding "Tous" to avoid duplication */}
-                {sectorFilters.filter(sector => sector !== "Tous").map((sector) => {
-                  const isActive = activeFilter === sector
-                  const count = filterCounts[sector]
+                {/* Sector Filters */}
+                {[
+                  { original: "Automobile", translated: t("realisationsPage.filterAutomobile"), icon: sectorIcons["Automobile"] },
+                  { original: "Immobilier", translated: t("realisationsPage.filterRealEstate"), icon: sectorIcons["Immobilier"] },
+                  { original: "Sport & Bien-être", translated: t("realisationsPage.filterSport"), icon: sectorIcons["Sport & Bien-être"] },
+                  { original: "Restauration", translated: t("realisationsPage.filterRestaurant"), icon: sectorIcons["Restauration"] },
+                  { original: "Artistes & Créateurs", translated: t("realisationsPage.filterArtists"), icon: sectorIcons["Artistes & Créateurs"] },
+                ].map(({ original, translated, icon }) => {
+                  const isActive = activeFilter === translated
+                  const count = filterCounts[translated] || 0
                   return (
                     <button
-                      key={`sector-${sector}`}
-                      onClick={() => setActiveFilter(sector)}
+                      key={`sector-${original}`}
+                      onClick={() => setActiveFilter(translated)}
                       className={`group relative px-5 py-2.5 rounded-full font-medium text-xs transition-all duration-300 ease-out flex items-center gap-2 backdrop-blur-xl flex-shrink-0 overflow-visible cursor-pointer ${
                         isActive
                           ? "bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] text-white shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/40"
                           : "bg-gradient-to-br from-white/12 via-white/8 to-white/5 text-white/75 border border-white/20 hover:bg-gradient-to-br hover:from-white/18 hover:via-white/12 hover:to-white/8 hover:text-white hover:border-white/30"
                       }`}
-                      aria-label={`Filtrer par ${sector}`}
+                      aria-label={`Filtrer par ${translated}`}
                       style={{
                         fontFamily: 'Montserrat, sans-serif',
                         letterSpacing: '0.01em',
@@ -432,9 +501,9 @@ export default function RealisationsPage() {
                     >
                       
                       <span className={`relative z-10 transition-all duration-300 ${isActive ? "text-white scale-105" : "text-white/70 group-hover:text-white group-hover:scale-110"}`} style={{ width: '14px', height: '14px' }}>
-                        {sectorIcons[sector]}
+                        {icon}
                       </span>
-                      <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${!isActive ? "group-hover:tracking-wider" : ""}`}>{sector}</span>
+                      <span className={`relative z-10 whitespace-nowrap text-xs transition-all duration-300 ${!isActive ? "group-hover:tracking-wider" : ""}`}>{translated}</span>
                       <span className={`relative z-10 px-1.5 py-0.5 rounded-full text-[10px] font-bold transition-all duration-300 min-w-[18px] flex items-center justify-center ${
                         isActive
                           ? "bg-white/25 text-white shadow-sm"
@@ -444,19 +513,19 @@ export default function RealisationsPage() {
                       </span>
                     </button>
                   )
-                  })}
+                })}
                 </div>
             </div>
 
           {/* Portfolio Grid - Premium Cards */}
           {filteredProjects.length === 0 ? (
             <div className="text-center py-20">
-              <p className="text-white/70 text-lg mb-4">Aucun projet ne correspond à vos filtres.</p>
+              <p className="text-white/70 text-lg mb-4">{t("realisationsPage.noProjects")}</p>
               <button
-                onClick={() => setActiveFilter("Tous")}
+                onClick={() => setActiveFilter(t("realisationsPage.filterAll"))}
                 className="px-6 py-3 bg-[#0073FF] text-white font-semibold rounded-full hover:bg-[#1AA3FF] transition-all duration-300"
               >
-                Réinitialiser les filtres
+                {t("realisationsPage.resetFilters")}
               </button>
             </div>
           ) : (
@@ -523,7 +592,7 @@ export default function RealisationsPage() {
                         </span>
                         <span className="h-px flex-1 bg-gradient-to-r from-transparent via-white/30 to-transparent" />
                         <span className="inline-flex items-center gap-2 text-white/80 transition-all duration-300 group-hover:text-white group-hover:gap-3">
-                          Voir le projet
+                          {t("realisationsPage.viewProject")}
                           <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
                         </span>
                       </div>
@@ -540,19 +609,19 @@ export default function RealisationsPage() {
               {/* Premium Badge */}
               <span className="relative inline-flex items-center gap-2 rounded-full border border-white/30 bg-gradient-to-br from-white/15 via-white/10 to-white/5 px-6 py-2.5 text-[11px] font-semibold uppercase tracking-[0.32em] text-white/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,115,255,0.15)]">
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/20 via-transparent to-cyan-400/20 opacity-50 blur-xl" />
-                <span className="relative z-10">parlons de votre prochain succès</span>
+                <span className="relative z-10">{t("realisationsPage.ctaBadge")}</span>
               </span>
               
               {/* Enhanced Text */}
               <p className="text-xl font-bold md:text-2xl leading-relaxed text-white/95">
-                Vous souhaitez un rendu{' '}
+                {t("realisationsPage.ctaText1")}{' '}
                 <span className="relative inline-block">
                   <span className="absolute inset-0 bg-gradient-to-r from-primary/40 via-cyan-400/40 to-primary/40 blur-xl opacity-50" />
                   <span className="relative bg-gradient-to-r from-white via-primary/90 to-white bg-clip-text text-transparent">
-                    aussi impactant
+                    {t("realisationsPage.ctaText2")}
                   </span>
                 </span>
-                {' '}? Transformons votre idée en performance.
+                {' '}{t("realisationsPage.ctaText3")}
               </p>
               
               {/* Premium Button */}
@@ -561,7 +630,7 @@ export default function RealisationsPage() {
                 className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] px-12 py-5 text-sm font-bold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgba(0,115,255,0.5)] shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/20"
               >
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 via-transparent to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <span className="relative z-10">Prendre rendez-vous</span>
+                <span className="relative z-10">{t("realisationsPage.ctaButton")}</span>
                 <ArrowRight className="h-4 w-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </div>

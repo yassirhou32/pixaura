@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import Image from "next/image"
 import { ChevronLeft, ChevronRight, X, Video, Image as ImageIcon, Play, ZoomIn } from "lucide-react"
+import { useTranslation } from "@/contexts/translation-context"
 
 interface ProjectModalProps {
   open: boolean
@@ -26,6 +27,7 @@ interface ProjectModalProps {
 }
 
 export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps) {
+  const { t } = useTranslation()
   const [lightboxOpen, setLightboxOpen] = useState(false)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [mediaLoaded, setMediaLoaded] = useState(false)
@@ -190,27 +192,27 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                   
                   // Logique intelligente pour déterminer le badge le plus significatif
                   if (videoCount > imageCount && videoCount > 0) {
-                    badgeText = "Production Vidéo"
+                    badgeText = t("projectModal.productionVideo")
                   } else if (imageCount > videoCount && imageCount > 0) {
-                    badgeText = "Shooting Photo"
+                    badgeText = t("projectModal.shootingPhoto")
                   } else if (videoCount > 0 && imageCount > 0 && videoCount === imageCount) {
-                    badgeText = "Production Multi-Média"
+                    badgeText = t("projectModal.multiMedia")
                   } else if (hasVideo && !hasImage) {
-                    badgeText = "Production Vidéo"
+                    badgeText = t("projectModal.productionVideo")
                   } else if (hasImage && !hasVideo) {
-                    badgeText = "Shooting Photo"
-                  } else if (project.sector === "Artistes & Créateurs") {
-                    badgeText = "Création Artistique"
-                  } else if (project.sector === "Immobilier") {
-                    badgeText = "Production Immobilière"
-                  } else if (project.sector === "Automobile") {
-                    badgeText = "Production Automobile"
-                  } else if (project.title.toLowerCase().includes("interview")) {
-                    badgeText = "Interview Vidéo"
-                  } else if (project.title.toLowerCase().includes("rally")) {
-                    badgeText = "Coverage Événementiel"
-                  } else if (project.title.toLowerCase().includes("halloween") || project.title.toLowerCase().includes("shooting")) {
-                    badgeText = "Shooting Créatif"
+                    badgeText = t("projectModal.shootingPhoto")
+                  } else if (project.sector === "Artistes & Créateurs" || project.sector === t("realisationsPage.filterArtists")) {
+                    badgeText = t("projectModal.artisticCreation")
+                  } else if (project.sector === "Immobilier" || project.sector === t("realisationsPage.filterRealEstate")) {
+                    badgeText = t("projectModal.realEstateProduction")
+                  } else if (project.sector === "Automobile" || project.sector === t("realisationsPage.filterAutomobile")) {
+                    badgeText = t("projectModal.automotiveProduction")
+                  } else if (project.title.toLowerCase().includes("interview") || project.title.toLowerCase().includes("entrevue")) {
+                    badgeText = t("projectModal.videoInterview")
+                  } else if (project.title.toLowerCase().includes("rally") || project.title.toLowerCase().includes("rallye")) {
+                    badgeText = t("projectModal.eventCoverage")
+                  } else if (project.title.toLowerCase().includes("halloween") || project.title.toLowerCase().includes("shooting") || project.title.toLowerCase().includes("tournage")) {
+                    badgeText = t("projectModal.creativeShooting")
                   }
                   
                   return (
@@ -240,7 +242,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
               {/* Objectif */}
               <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
                 <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                  Objectif
+                  {t("projectModal.objective")}
                 </h3>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {project.objective}
@@ -250,7 +252,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
               {/* Idée créative */}
               <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
                 <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                  Idée créative
+                  {t("projectModal.creativeIdea")}
                 </h3>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {project.creativeIdea}
@@ -260,7 +262,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
               {/* Dispositif */}
               <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
                 <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                  Dispositif
+                  {t("projectModal.device")}
                 </h3>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {project.device}
@@ -270,7 +272,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
               {/* Résultats */}
               <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
                 <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                  Résultats
+                  {t("projectModal.results")}
                 </h3>
                 <p className="text-sm text-white/70 leading-relaxed">
                   {project.results}
@@ -283,7 +285,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                   <div className="relative z-10 flex items-center gap-3">
                     <span className="inline-flex h-2 w-2 rounded-full bg-primary/70" />
                     <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/85">
-                      Galerie visuelle
+                      {t("projectModal.visualGallery")}
                     </h3>
                     <div className="h-px flex-1 bg-white/12" />
                   </div>
@@ -294,7 +296,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                       <div className="flex items-center gap-3">
                         <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/75 backdrop-blur-sm">
                           <Video className="h-4 w-4 text-white/80" />
-                          Vidéos
+                          {t("projectModal.videos")}
                           <span className="rounded-full bg-white/18 px-2 py-0.5 text-[10px]">
                             {videos.length}
                           </span>
@@ -319,7 +321,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                                }}
                                role="button"
                                tabIndex={0}
-                               aria-label={`Voir la vidéo ${videoIndex + 1}`}
+                               aria-label={`${t("projectModal.viewVideo")} ${videoIndex + 1}`}
                              >
                                <video
                                  ref={(el) => {
@@ -349,7 +351,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                                <div className="absolute inset-0 bg-white/5 opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
                                <span className="absolute top-3 left-3 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/12 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.3em] text-white/85 backdrop-blur-sm">
                                  <Video className="h-4 w-4" />
-                                 Vidéo
+                                 {t("projectModal.video")}
                                </span>
                                <span className="absolute top-3 right-3 inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/35 bg-white/15 text-xs font-semibold text-white/90 backdrop-blur-sm">
                                  {displayNumber}
@@ -372,7 +374,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                       <div className="flex items-center gap-3">
                         <div className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/12 px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.3em] text-white/75 backdrop-blur-sm">
                           <ImageIcon className="h-4 w-4 text-white/80" />
-                          Photos
+                          {t("projectModal.photos")}
                           <span className="rounded-full bg-white/18 px-2 py-0.5 text-[10px]">
                             {photos.length}
                           </span>
@@ -397,7 +399,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                               }}
                               role="button"
                               tabIndex={0}
-                              aria-label={`Voir la photo ${photoIndex + 1}`}
+                              aria-label={`${t("projectModal.viewPhoto")} ${photoIndex + 1}`}
                             >
                               <Image
                                 src={media}
@@ -434,7 +436,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
             }
           }}
           role="dialog"
-          aria-label="Galerie visuelle"
+          aria-label={t("projectModal.visualGallery")}
         >
           <button
             onClick={(e) => {
@@ -442,7 +444,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
               setLightboxOpen(false)
             }}
             className="absolute top-4 right-4 z-20 p-2 bg-black/60 hover:bg-black/80 rounded-full border border-white/20"
-            aria-label="Fermer la galerie"
+            aria-label={t("projectModal.closeGallery")}
           >
             <X className="w-5 h-5 text-white" />
           </button>
@@ -458,7 +460,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                 }}
                 type="button"
                 className="absolute left-4 z-20 p-3 bg-black/60 hover:bg-black/80 rounded-full border border-white/20 cursor-pointer"
-                aria-label="Image précédente"
+                aria-label={t("projectModal.previousImage")}
                 style={{ pointerEvents: 'auto', userSelect: 'none' }}
               >
                 <ChevronLeft className="w-5 h-5 text-white pointer-events-none" />
@@ -516,7 +518,7 @@ export function ProjectModal({ open, onOpenChange, project }: ProjectModalProps)
                 }}
                 type="button"
                 className="absolute right-4 z-20 p-3 bg-black/60 hover:bg-black/80 rounded-full border border-white/20 cursor-pointer"
-                aria-label="Image suivante"
+                aria-label={t("projectModal.nextImage")}
                 style={{ pointerEvents: 'auto', userSelect: 'none' }}
               >
                 <ChevronRight className="w-5 h-5 text-white pointer-events-none" />

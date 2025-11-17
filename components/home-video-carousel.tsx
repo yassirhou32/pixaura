@@ -1,52 +1,54 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { useCallback, useEffect, useRef, useState, useMemo } from "react"
 import { Pause, Play, Volume2, VolumeX, ChevronLeft, ChevronRight, Sparkles } from "lucide-react"
-
-const slides = [
-  {
-    id: 1,
-    title: "Immobilier de prestige",
-    description: "Film immersif pour une expérience résidentielle haut de gamme.",
-    video: "/Banque d_images/Immobilier.mp4",
-    poster: "/Banque d_images/Copie de DSC07052 - Copie.jpg",
-    tags: ["Film", "Brand", "Upscale"],
-  },
-  {
-    id: 2,
-    title: "Performance automobile",
-    description: "Captation sensorielle et storytelling autour d'une écurie de rallye.",
-    video: "/Banque d_images/rally1.mp4",
-    poster: "/Banque d_images/Copie de M7_01248 - Copie.jpg",
-    tags: ["Motion", "Social", "Speed"],
-  },
-  {
-    id: 3,
-    title: "Activation événementielle",
-    description: "Production multi-formats pour un lancement lifestyle en nocturne.",
-    video: "/Banque d_images/halowen.mp4",
-    poster: "/Banque d_images/Copie de DSC04614.jpg",
-    tags: ["Live", "Event", "Experience"],
-  },
-  {
-    id: 4,
-    title: "Castles Rally",
-    description: "Remerciements 2025 - Production vidéo premium pour événement automobile.",
-    video: "/Banque d_images/rally2.mp4",
-    poster: "/Banque d_images/Copie de M7_02930.jpg",
-    tags: ["Film", "Event", "Automobile"],
-  },
-  {
-    id: 5,
-    title: "Interview Exclusive",
-    description: "Production podcast et contenu digital pour Humind.",
-    video: "/Banque d_images/pod1.mp4",
-    poster: "/Banque d_images/Copie de M7_03194.jpg",
-    tags: ["Podcast", "Digital", "Content"],
-  },
-]
+import { useTranslation } from "@/contexts/translation-context"
 
 export function HomeVideoCarousel() {
+  const { t } = useTranslation()
+  
+  const slides = useMemo(() => [
+    {
+      id: 1,
+      title: t("portfolio.carouselSlide1Title"),
+      description: t("portfolio.carouselSlide1Description"),
+      video: "/Banque d_images/Immobilier.mp4",
+      poster: "/Banque d_images/Copie de DSC07052 - Copie.jpg",
+      tags: [t("portfolio.carouselSlide1Tag1"), t("portfolio.carouselSlide1Tag2"), t("portfolio.carouselSlide1Tag3")],
+    },
+    {
+      id: 2,
+      title: t("portfolio.carouselSlide2Title"),
+      description: t("portfolio.carouselSlide2Description"),
+      video: "/Banque d_images/rally1.mp4",
+      poster: "/Banque d_images/Copie de M7_01248 - Copie.jpg",
+      tags: [t("portfolio.carouselSlide2Tag1"), t("portfolio.carouselSlide2Tag2"), t("portfolio.carouselSlide2Tag3")],
+    },
+    {
+      id: 3,
+      title: t("portfolio.carouselSlide3Title"),
+      description: t("portfolio.carouselSlide3Description"),
+      video: "/Banque d_images/halowen.mp4",
+      poster: "/Banque d_images/Copie de DSC04614.jpg",
+      tags: [t("portfolio.carouselSlide3Tag1"), t("portfolio.carouselSlide3Tag2"), t("portfolio.carouselSlide3Tag3")],
+    },
+    {
+      id: 4,
+      title: t("portfolio.carouselSlide4Title"),
+      description: t("portfolio.carouselSlide4Description"),
+      video: "/Banque d_images/rally2.mp4",
+      poster: "/Banque d_images/Copie de M7_02930.jpg",
+      tags: [t("portfolio.carouselSlide4Tag1"), t("portfolio.carouselSlide4Tag2"), t("portfolio.carouselSlide4Tag3")],
+    },
+    {
+      id: 5,
+      title: t("portfolio.carouselSlide5Title"),
+      description: t("portfolio.carouselSlide5Description"),
+      video: "/Banque d_images/pod1.mp4",
+      poster: "/Banque d_images/Copie de M7_03194.jpg",
+      tags: [t("portfolio.carouselSlide5Tag1"), t("portfolio.carouselSlide5Tag2"), t("portfolio.carouselSlide5Tag3")],
+    },
+  ], [t])
   const [currentIndex, setCurrentIndex] = useState(0)
   const [isMuted, setIsMuted] = useState(true)
   const [isPlaying, setIsPlaying] = useState(true)
@@ -59,6 +61,8 @@ export function HomeVideoCarousel() {
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const sectionRef = useRef<HTMLElement>(null)
+  const touchStartX = useRef<number | null>(null)
+  const touchDeltaX = useRef<number>(0)
 
   const currentSlide = slides[currentIndex]
 
@@ -276,6 +280,8 @@ export function HomeVideoCarousel() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [])
 
+  // Mobile swipe navigation - declared later after handlers are defined to avoid TDZ
+
   // Ultra-smooth transition - Optimized to prevent blocking
   const handleTransition = useCallback((newIndex: number, dir: 'left' | 'right') => {
     if (isTransitioning || newIndex === currentIndex) return
@@ -352,6 +358,43 @@ export function HomeVideoCarousel() {
     const newIndex = (currentIndex - 1 + slides.length) % slides.length
     handleTransition(newIndex, 'left')
   }, [currentIndex, handleTransition, isTransitioning])
+
+  // Mobile swipe navigation (now that handlers are defined)
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const onTouchStart = (e: TouchEvent) => {
+      touchStartX.current = e.touches[0].clientX
+      touchDeltaX.current = 0
+    }
+    const onTouchMove = (e: TouchEvent) => {
+      if (touchStartX.current == null) return
+      touchDeltaX.current = e.touches[0].clientX - touchStartX.current
+    }
+    const onTouchEnd = () => {
+      const threshold = 40 // px
+      if (Math.abs(touchDeltaX.current) > threshold) {
+        if (touchDeltaX.current < 0) {
+          handleNext()
+        } else {
+          handlePrevious()
+        }
+      }
+      touchStartX.current = null
+      touchDeltaX.current = 0
+    }
+
+    el.addEventListener('touchstart', onTouchStart, { passive: true })
+    el.addEventListener('touchmove', onTouchMove, { passive: true })
+    el.addEventListener('touchend', onTouchEnd, { passive: true })
+
+    return () => {
+      el.removeEventListener('touchstart', onTouchStart as any)
+      el.removeEventListener('touchmove', onTouchMove as any)
+      el.removeEventListener('touchend', onTouchEnd as any)
+    }
+  }, [handleNext, handlePrevious])
 
   const togglePlay = useCallback(() => {
     const currentVideo = videoRefs.current[currentIndex]
@@ -554,7 +597,7 @@ export function HomeVideoCarousel() {
               style={{
                 transitionDelay: isVisible ? '600ms' : '0ms',
               }}
-              aria-label="Projet précédent"
+              aria-label={t("portfolio.carouselPreviousProject")}
               disabled={isTransitioning}
             >
               <ChevronLeft className="h-8 w-8 text-white transition-all duration-300 group-hover:scale-125 group-hover:text-cyan-300 lg:h-10 lg:w-10" />
@@ -649,6 +692,23 @@ export function HomeVideoCarousel() {
                 transform: `perspective(1000px) rotateY(${(mousePosition.x - 50) * 0.02}deg) rotateX(${(mousePosition.y - 50) * -0.02}deg)`,
               }}
             >
+              {/* Mobile Nav Buttons inside video */}
+              <button
+                onClick={handlePrevious}
+                className="lg:hidden absolute left-3 top-1/2 z-30 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-95"
+                aria-label={t("portfolio.carouselPreviousVideo")}
+                disabled={isTransitioning}
+              >
+                <ChevronLeft className="h-6 w-6" />
+              </button>
+              <button
+                onClick={handleNext}
+                className="lg:hidden absolute right-3 top-1/2 z-30 -translate-y-1/2 flex h-11 w-11 items-center justify-center rounded-full bg-black/60 backdrop-blur-md border border-white/20 text-white active:scale-95"
+                aria-label={t("portfolio.carouselNextVideo")}
+                disabled={isTransitioning}
+              >
+                <ChevronRight className="h-6 w-6" />
+              </button>
               {/* Royal Multi-Layer Borders - Ultra */}
               <div className="absolute inset-0 rounded-3xl border-[3px] border-white/35" />
               <div className="absolute inset-[1px] rounded-3xl border-[2px] border-white/25" />
@@ -765,7 +825,7 @@ export function HomeVideoCarousel() {
                 <button
                   onClick={togglePlay}
                   className="group/btn flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-black/80 via-black/70 to-black/80 backdrop-blur-2xl border-2 border-white/35 transition-all duration-500 hover:from-cyan-400/30 hover:via-cyan-300/20 hover:to-purple-400/30 hover:border-cyan-300/60 hover:scale-110 hover:shadow-[0_0_40px_rgba(34,211,238,0.6),0_0_80px_rgba(34,211,238,0.3)]"
-                  aria-label={isPlaying ? "Pause" : "Play"}
+                  aria-label={isPlaying ? t("portfolio.carouselPause") : t("portfolio.carouselPlay")}
                 >
                   {isPlaying ? (
                     <Pause className="h-6 w-6 text-white transition-all duration-300 group-hover/btn:scale-125 group-hover/btn:text-cyan-300" />
@@ -777,7 +837,7 @@ export function HomeVideoCarousel() {
                 <button
                   onClick={toggleMute}
                   className="group/btn flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-br from-black/80 via-black/70 to-black/80 backdrop-blur-2xl border-2 border-white/35 transition-all duration-500 hover:from-cyan-400/30 hover:via-cyan-300/20 hover:to-purple-400/30 hover:border-cyan-300/60 hover:scale-110 hover:shadow-[0_0_40px_rgba(34,211,238,0.6),0_0_80px_rgba(34,211,238,0.3)]"
-                  aria-label={isMuted ? "Activer le son" : "Couper le son"}
+                  aria-label={isMuted ? t("portfolio.carouselUnmute") : t("portfolio.carouselMute")}
                 >
                   {isMuted ? (
                     <VolumeX className="h-6 w-6 text-white transition-all duration-300 group-hover/btn:scale-125 group-hover/btn:text-cyan-300" />
@@ -843,7 +903,7 @@ export function HomeVideoCarousel() {
               {/* Project Number - Royal */}
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase tracking-[0.45em] text-white/50 transition-all duration-500">
-                  Projet
+                  {t("portfolio.carouselProject")}
                 </span>
                 <div 
                   className="text-4xl font-extralight text-white transition-all duration-500"
@@ -865,7 +925,7 @@ export function HomeVideoCarousel() {
               {/* Total Projects - Royal */}
               <div className="space-y-2">
                 <span className="text-xs font-black uppercase tracking-[0.45em] text-white/50 transition-all duration-500">
-                  Total
+                  {t("portfolio.carouselTotal")}
                 </span>
                 <div 
                   className="text-4xl font-extralight text-white/70 transition-all duration-500"
@@ -889,7 +949,7 @@ export function HomeVideoCarousel() {
               style={{
                 transitionDelay: isVisible ? '800ms' : '0ms',
               }}
-              aria-label="Projet suivant"
+              aria-label={t("portfolio.carouselNextProject")}
               disabled={isTransitioning}
             >
               <ChevronRight className="h-8 w-8 text-white transition-all duration-300 group-hover:scale-125 group-hover:text-cyan-300 lg:h-10 lg:w-10" />

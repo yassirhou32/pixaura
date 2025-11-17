@@ -6,6 +6,7 @@ import { Footer } from "@/components/footer"
 import { GlobalAtmosphere } from "@/components/global-atmosphere"
 import { Reveal } from "@/components/reveal"
 import { Play, ArrowRight, Sparkles, Heart, Zap, Users, Globe, Film, Mic, BarChart3, Lightbulb, Target, Rocket, Video } from "lucide-react"
+import { useTranslation } from "@/contexts/translation-context"
 
 // Structure de données pour les épisodes
 interface Episode {
@@ -19,64 +20,66 @@ interface Episode {
   description: string
 }
 
-// Données des épisodes
-const episodes: Episode[] = [
+// Données des épisodes - sera traduit dans le composant
+const getEpisodes = (t: (key: string) => string): Episode[] => [
   {
     id: "1",
-    title: "IL A JOUÉ AVEC MARADONA: RAÚL VARGAS RÍOS SUR HUMIND",
+    title: t("humindPage.episode1Title"),
     guest: "Raúl Vargas Ríos",
     category: "Sport",
     duration: "43:00",
-    date: "il y a 2 semaines",
+    date: t("humindPage.episodeDate2Weeks"),
     youtubeId: "EMCtYNYLwyE",
-    description: "Interview exclusive avec Raúl Vargas Ríos sur son parcours exceptionnel."
+    description: t("humindPage.episode1Description")
   },
   {
     id: "2",
-    title: "DE BRAQUEUR À PROF: KAMEL MADANI SUR HUMIND",
+    title: t("humindPage.episode2Title"),
     guest: "Kamel Madani",
     category: "Réinsertion",
     duration: "24:55",
-    date: "il y a 4 semaines",
+    date: t("humindPage.episodeDate4Weeks"),
     youtubeId: "sRM6w8wUk2s",
-    description: "Parcours de transformation et seconde chance."
+    description: t("humindPage.episode2Description")
   },
   {
     id: "3",
-    title: "ON VISITE LA FONDERIE AUDIARD: CONFIDENCE ALEX CHOUSSY",
+    title: t("humindPage.episode3Title"),
     guest: "Alex Choussy",
     category: "Artisanat",
     duration: "24:53",
-    date: "il y a 1 mois",
+    date: t("humindPage.episodeDate1Month"),
     youtubeId: "ztysZbvECf8",
-    description: "Découverte de l'artisanat d'exception avec Alex Choussy."
+    description: t("humindPage.episode3Description")
   },
   {
     id: "4",
-    title: "MICHEL AUDIARD SCULPTEUR AUTODIDACTE: 50 ANS D'HISTOIRE",
+    title: t("humindPage.episode4Title"),
     guest: "Michel Audiard",
     category: "Création",
     duration: "44:14",
-    date: "il y a 1 mois",
+    date: t("humindPage.episodeDate1Month"),
     youtubeId: "puawY9rH6T0",
-    description: "Retour sur 50 ans d'histoire et de création artistique."
+    description: t("humindPage.episode4Description")
   },
   {
     id: "5",
-    title: "ÉPISODE 5",
-    guest: "Invité à définir",
+    title: t("humindPage.episode5Title"),
+    guest: t("humindPage.episodeGuestToDefine"),
     category: "Luxe",
     duration: "30:00",
-    date: "il y a 2 mois",
+    date: t("humindPage.episodeDate2Months"),
     youtubeId: "SfaIXswMO_c",
-    description: "Un épisode exceptionnel à découvrir."
+    description: t("humindPage.episode5Description")
   }
 ]
 
-const categories = ["Tous", "Sport", "Réinsertion", "Artisanat", "Création", "Luxe"] as const
-
 export default function HumindPage() {
-  const [activeFilter, setActiveFilter] = useState<"Tous" | string>("Tous")
+  const { t } = useTranslation()
+  const categories = [t("humindPage.categoryAll"), t("humindPage.categorySport"), t("humindPage.categoryReinsertion"), t("humindPage.categoryCraft"), t("humindPage.categoryCreation"), t("humindPage.categoryLuxury")] as const
+  
+  const episodes = getEpisodes(t)
+  const [activeFilter, setActiveFilter] = useState<string>(t("humindPage.categoryAll"))
   const [videoLoaded, setVideoLoaded] = useState(false)
   const [clickedFilter, setClickedFilter] = useState<string | null>(null)
   const [isMounted, setIsMounted] = useState(false)
@@ -121,21 +124,38 @@ export default function HumindPage() {
 
   // Filtrer les épisodes
   const filteredEpisodes = useMemo(() => {
-    if (activeFilter === "Tous") {
+    if (activeFilter === t("humindPage.categoryAll")) {
       return episodes
     }
-    return episodes.filter(ep => ep.category === activeFilter)
-  }, [activeFilter])
+    // Map translated categories back to original
+    const categoryMap: Record<string, string> = {
+      [t("humindPage.categorySport")]: "Sport",
+      [t("humindPage.categoryReinsertion")]: "Réinsertion",
+      [t("humindPage.categoryCraft")]: "Artisanat",
+      [t("humindPage.categoryCreation")]: "Création",
+      [t("humindPage.categoryLuxury")]: "Luxe",
+    }
+    const originalCategory = categoryMap[activeFilter] || activeFilter
+    return episodes.filter(ep => ep.category === originalCategory)
+  }, [activeFilter, t])
 
   // Compteurs par catégorie
   const categoryCounts = useMemo(() => {
     const counts: Record<string, number> = {}
-    counts["Tous"] = episodes.length
+    counts[t("humindPage.categoryAll")] = episodes.length
+    const categoryMap: Record<string, string> = {
+      [t("humindPage.categorySport")]: "Sport",
+      [t("humindPage.categoryReinsertion")]: "Réinsertion",
+      [t("humindPage.categoryCraft")]: "Artisanat",
+      [t("humindPage.categoryCreation")]: "Création",
+      [t("humindPage.categoryLuxury")]: "Luxe",
+    }
     categories.slice(1).forEach(cat => {
-      counts[cat] = episodes.filter(ep => ep.category === cat).length
+      const originalCategory = categoryMap[cat] || cat
+      counts[cat] = episodes.filter(ep => ep.category === originalCategory).length
     })
     return counts
-  }, [])
+  }, [t])
 
   return (
     <main className="relative min-h-screen overflow-hidden bg-transparent">
@@ -201,10 +221,10 @@ export default function HumindPage() {
                   </div>
                   <h1 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Le visage humain
+                      {t("humindPage.heroTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-blue-200 via-cyan-200 to-purple-200 bg-clip-text text-transparent">
-                      de ceux qui font bouger le monde
+                      {t("humindPage.heroTitle2")}
                     </span>
                   </h1>
                 </div>
@@ -218,10 +238,10 @@ export default function HumindPage() {
                 </div>
                 <div>
                   <p className="max-w-2xl text-base text-white/80 md:text-lg lg:text-xl leading-relaxed">
-                    Une plateforme d'interviews authentiques où des personnalités inspirantes partagent leurs parcours, leurs résiliences et leurs histoires.
+                    {t("humindPage.heroDescription1")}
                   </p>
                   <p className="max-w-2xl mt-3 text-base text-white/70 md:text-lg lg:text-xl leading-relaxed">
-                    Formats courts pour les réseaux, formats longs pour YouTube et podcast.
+                    {t("humindPage.heroDescription2")}
                   </p>
                 </div>
               </div>
@@ -254,10 +274,10 @@ export default function HumindPage() {
                 </div>
                 <h2 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
                   <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                    Tous les
+                    {t("humindPage.episodesTitle1")}
                   </span>
                   <span className="block mt-2 bg-gradient-to-br from-purple-200 via-pink-200 to-rose-200 bg-clip-text text-transparent">
-                    épisodes
+                    {t("humindPage.episodesTitle2")}
                   </span>
                 </h2>
               </div>
@@ -319,7 +339,7 @@ export default function HumindPage() {
               <div className="flex items-center gap-4 text-xs font-medium uppercase tracking-[0.3em] text-white/40 mt-4">
                 <span>{String(filteredEpisodes.length).padStart(2, "0")}</span>
                 <div className="h-px flex-1 bg-white/10" />
-                <span>épisode{filteredEpisodes.length > 1 ? 's' : ''} trouvé{filteredEpisodes.length > 1 ? 's' : ''}</span>
+                <span>{filteredEpisodes.length > 1 ? t("humindPage.episodesFoundPlural") : t("humindPage.episodesFound")}</span>
               </div>
             </div>
 
@@ -377,7 +397,7 @@ export default function HumindPage() {
                     <div className="mt-6 flex items-center gap-4 text-[10px] uppercase tracking-[0.28em] text-white/50">
                       <span className="h-px flex-1 bg-white/20" />
                       <span className="inline-flex items-center gap-2 text-white transition hover:text-white/70">
-                        Voir sur YouTube
+                        {t("humindPage.watchOnYouTube")}
                         <ArrowRight className="h-3 w-3" />
                       </span>
                     </div>
@@ -432,10 +452,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Le concept
+                      {t("humindPage.conceptTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-blue-200 via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-                      Humind
+                      {t("humindPage.conceptTitle2")}
                     </span>
                   </h2>
                 </div>
@@ -444,7 +464,7 @@ export default function HumindPage() {
               {/* Right Column - Ultra Premium Content */}
               <div className="lg:col-span-8 space-y-10">
                 <p className="text-xl text-white/70 max-w-3xl leading-[1.8] font-light">
-                  Humind est une plateforme d'interviews imaginée et produite par <span className="font-semibold text-white">Pixaura International</span>, dédiée à mettre en lumière des parcours de vie marquants. Elle célèbre la sincérité, l'émotion et la transmission, loin des codes corporate.
+                  {t("humindPage.conceptDescription")}
                 </p>
                 
                 <div className="grid md:grid-cols-2 gap-8">
@@ -477,13 +497,13 @@ export default function HumindPage() {
                         </div>
                         
                         <div className="mb-6">
-                          <p className="text-[11px] uppercase tracking-[0.5em] text-white/40 font-bold mb-3">Format court</p>
+                          <p className="text-[11px] uppercase tracking-[0.5em] text-white/40 font-bold mb-3">{t("humindPage.shortFormat")}</p>
                           <p className="text-4xl font-black text-white mb-3 leading-none">
-                            <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">3-6</span>
+                            <span className="bg-gradient-to-r from-white via-blue-100 to-white bg-clip-text text-transparent">{t("humindPage.shortFormatDuration")}</span>
                             <span className="text-white/60 text-2xl ml-2">min</span>
                           </p>
                         </div>
-                        <p className="text-base text-white/60 leading-relaxed font-light">Percutantes et rythmées pour TikTok, Reels, Shorts</p>
+                        <p className="text-base text-white/60 leading-relaxed font-light">{t("humindPage.shortFormatDesc")}</p>
                       </div>
                     </div>
                   </div>
@@ -517,13 +537,13 @@ export default function HumindPage() {
                         </div>
                         
                         <div className="mb-6">
-                          <p className="text-[11px] uppercase tracking-[0.5em] text-white/40 font-bold mb-3">Format long</p>
+                          <p className="text-[11px] uppercase tracking-[0.5em] text-white/40 font-bold mb-3">{t("humindPage.longFormat")}</p>
                           <p className="text-4xl font-black text-white mb-3 leading-none">
-                            <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">15-30</span>
+                            <span className="bg-gradient-to-r from-white via-purple-100 to-white bg-clip-text text-transparent">{t("humindPage.longFormatDuration")}</span>
                             <span className="text-white/60 text-2xl ml-2">min</span>
                           </p>
                         </div>
-                        <p className="text-base text-white/60 leading-relaxed font-light">Profondes et immersives pour YouTube & Podcasts</p>
+                        <p className="text-base text-white/60 leading-relaxed font-light">{t("humindPage.longFormatDesc")}</p>
                       </div>
                     </div>
                   </div>
@@ -570,10 +590,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-4xl md:text-5xl lg:text-6xl font-black leading-[1.05] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Nos valeurs
+                      {t("humindPage.valuesTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-purple-200 via-pink-200 to-rose-200 bg-clip-text text-transparent">
-                      fondamentales
+                      {t("humindPage.valuesTitle2")}
                     </span>
                   </h2>
                 </div>
@@ -583,11 +603,11 @@ export default function HumindPage() {
               <div className="lg:col-span-7 space-y-10 relative z-20">
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
                   {[
-                    { icon: Heart, title: "Authenticité", desc: "Parole vraie, sans artifice", gradient: "from-red-500/40 via-pink-500/40 to-rose-500/40", iconGlow: "rgba(239,68,68,0.6)" },
-                    { icon: Zap, title: "Inspiration", desc: "Provoquer le déclic", gradient: "from-yellow-500/40 via-orange-500/40 to-amber-500/40", iconGlow: "rgba(234,179,8,0.6)" },
-                    { icon: Users, title: "Transmission", desc: "Partager l'essentiel", gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
-                    { icon: Globe, title: "Accessibilité", desc: "Compréhensible par tous", gradient: "from-green-500/40 via-emerald-500/40 to-teal-500/40", iconGlow: "rgba(34,197,94,0.6)" },
-                    { icon: Sparkles, title: "Diversité", desc: "Tous les profils inspirants", gradient: "from-purple-500/40 via-violet-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
+                    { icon: Heart, title: t("humindPage.authenticity"), desc: t("humindPage.authenticityDesc"), gradient: "from-red-500/40 via-pink-500/40 to-rose-500/40", iconGlow: "rgba(239,68,68,0.6)" },
+                    { icon: Zap, title: t("humindPage.inspiration"), desc: t("humindPage.inspirationDesc"), gradient: "from-yellow-500/40 via-orange-500/40 to-amber-500/40", iconGlow: "rgba(234,179,8,0.6)" },
+                    { icon: Users, title: t("humindPage.transmission"), desc: t("humindPage.transmissionDesc"), gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
+                    { icon: Globe, title: t("humindPage.accessibility"), desc: t("humindPage.accessibilityDesc"), gradient: "from-green-500/40 via-emerald-500/40 to-teal-500/40", iconGlow: "rgba(34,197,94,0.6)" },
+                    { icon: Sparkles, title: t("humindPage.diversity"), desc: t("humindPage.diversityDesc"), gradient: "from-purple-500/40 via-violet-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
                   ].map((value, idx) => {
                     const Icon = value.icon
                     return (
@@ -666,10 +686,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Notre approche
+                      {t("humindPage.editorialTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-cyan-200 via-blue-200 to-indigo-200 bg-clip-text text-transparent">
-                      éditoriale
+                      {t("humindPage.editorialTitle2")}
                     </span>
                   </h2>
                 </div>
@@ -697,19 +717,19 @@ export default function HumindPage() {
                             </div>
                           </div>
                         </div>
-                        <h3 className="text-2xl font-black text-white mb-6">Format</h3>
+                        <h3 className="text-2xl font-black text-white mb-6">{t("humindPage.formatTitle")}</h3>
                         <ul className="space-y-4 text-base text-white/70 leading-relaxed font-light">
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
-                            <span>Face caméra, sobre et fluide</span>
+                            <span>{t("humindPage.formatPoint1")}</span>
                           </li>
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
-                            <span>Questions sur parcours, doutes, échecs</span>
+                            <span>{t("humindPage.formatPoint2")}</span>
                           </li>
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-blue-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(59,130,246,0.6)]" />
-                            <span>Rythme naturel, sans surproduction</span>
+                            <span>{t("humindPage.formatPoint3")}</span>
                           </li>
                         </ul>
                       </div>
@@ -735,19 +755,19 @@ export default function HumindPage() {
                             </div>
                           </div>
                         </div>
-                        <h3 className="text-2xl font-black text-white mb-6">Ton & intention</h3>
+                        <h3 className="text-2xl font-black text-white mb-6">{t("humindPage.toneTitle")}</h3>
                         <ul className="space-y-4 text-base text-white/70 leading-relaxed font-light">
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(168,85,247,0.6)]" />
-                            <span>Humain, direct, sans filtre</span>
+                            <span>{t("humindPage.tonePoint1")}</span>
                           </li>
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(168,85,247,0.6)]" />
-                            <span>Priorité à l'histoire, pas au statut</span>
+                            <span>{t("humindPage.tonePoint2")}</span>
                           </li>
                           <li className="flex items-start gap-4">
                             <div className="w-2 h-2 rounded-full bg-purple-400 mt-2 flex-shrink-0 shadow-[0_0_12px_rgba(168,85,247,0.6)]" />
-                            <span>Profils inspirants, hors projecteurs</span>
+                            <span>{t("humindPage.tonePoint3")}</span>
                           </li>
                         </ul>
                       </div>
@@ -796,10 +816,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Un projet
+                      {t("humindPage.pixauraTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-blue-200 via-indigo-200 to-purple-200 bg-clip-text text-transparent">
-                      signé Pixaura
+                      {t("humindPage.pixauraTitle2")}
                     </span>
                   </h2>
                 </div>
@@ -808,14 +828,14 @@ export default function HumindPage() {
               {/* Right Column - Ultra Premium Content */}
               <div className="lg:col-span-8 space-y-10">
                 <p className="text-xl text-white/70 max-w-3xl leading-[1.8] font-light">
-                  Humind est <span className="font-semibold text-white">l'extension naturelle du savoir-faire Pixaura</span> en storytelling, direction artistique et stratégie audiovisuelle.
+                  {t("humindPage.pixauraDescription")}
                 </p>
                 
                 <div className="grid md:grid-cols-3 gap-6">
                   {[
-                    { icon: Film, title: "Narration maîtrisée", desc: "Storytelling authentique à impact émotionnel", gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
-                    { icon: Sparkles, title: "Esthétique soignée", desc: "Réalisation élégante, sobre, centrée", gradient: "from-purple-500/40 via-pink-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
-                    { icon: BarChart3, title: "Formats performants", desc: "Optimisés pour les algorithmes", gradient: "from-green-500/40 via-emerald-500/40 to-teal-500/40", iconGlow: "rgba(34,197,94,0.6)" },
+                    { icon: Film, title: t("humindPage.narrationTitle"), desc: t("humindPage.narrationDesc"), gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
+                    { icon: Sparkles, title: t("humindPage.aestheticTitle"), desc: t("humindPage.aestheticDesc"), gradient: "from-purple-500/40 via-pink-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
+                    { icon: BarChart3, title: t("humindPage.formatsTitle"), desc: t("humindPage.formatsDesc"), gradient: "from-green-500/40 via-emerald-500/40 to-teal-500/40", iconGlow: "rgba(34,197,94,0.6)" },
                   ].map((item, idx) => {
                     const Icon = item.icon
                     return (
@@ -887,10 +907,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Dans l'écosystème
+                      {t("humindPage.ecosystemTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-indigo-200 via-purple-200 to-pink-200 bg-clip-text text-transparent">
-                      Pixaura
+                      {t("humindPage.ecosystemTitle2")}
                     </span>
                   </h2>
                 </div>
@@ -900,9 +920,9 @@ export default function HumindPage() {
               <div className="lg:col-span-8 space-y-10">
                 <div className="grid md:grid-cols-3 gap-6">
                   {[
-                    { icon: Rocket, title: "Laboratoire créatif", desc: "Teste, affine et innove", gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
-                    { icon: Target, title: "Média référent", desc: "Renforce la crédibilité Pixaura", gradient: "from-purple-500/40 via-pink-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
-                    { icon: Zap, title: "Accélérateur d'influence", desc: "Attire personnalités & partenaires", gradient: "from-yellow-500/40 via-orange-500/40 to-amber-500/40", iconGlow: "rgba(234,179,8,0.6)" },
+                    { icon: Rocket, title: t("humindPage.labTitle"), desc: t("humindPage.labDesc"), gradient: "from-blue-500/40 via-cyan-500/40 to-sky-500/40", iconGlow: "rgba(59,130,246,0.6)" },
+                    { icon: Target, title: t("humindPage.mediaTitle"), desc: t("humindPage.mediaDesc"), gradient: "from-purple-500/40 via-pink-500/40 to-fuchsia-500/40", iconGlow: "rgba(168,85,247,0.6)" },
+                    { icon: Zap, title: t("humindPage.influenceTitle"), desc: t("humindPage.influenceDesc"), gradient: "from-yellow-500/40 via-orange-500/40 to-amber-500/40", iconGlow: "rgba(234,179,8,0.6)" },
                   ].map((item, idx) => {
                     const Icon = item.icon
                     return (
@@ -974,10 +994,10 @@ export default function HumindPage() {
                   </div>
                   <h2 className="text-5xl md:text-6xl font-black leading-[0.95] tracking-tight">
                     <span className="block bg-gradient-to-br from-white via-white/95 to-white/80 bg-clip-text text-transparent drop-shadow-[0_0_40px_rgba(255,255,255,0.3)]">
-                      Ils nous ont
+                      {t("humindPage.inspiredTitle1")}
                     </span>
                     <span className="block mt-2 bg-gradient-to-br from-pink-200 via-rose-200 to-red-200 bg-clip-text text-transparent">
-                      inspirés
+                      {t("humindPage.inspiredTitle2")}
                     </span>
                   </h2>
                 </div>

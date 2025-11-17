@@ -3,11 +3,15 @@
 import Link from "next/link"
 import Image from "next/image"
 import { useEffect, useState } from "react"
+import { useTranslation } from "@/contexts/translation-context"
+import { Globe, Sparkles } from "lucide-react"
 
 export function Navbar() {
+  const { t, language, setLanguage } = useTranslation()
   const [isOpen, setIsOpen] = useState(false)
   const [hoveredItem, setHoveredItem] = useState<string | null>(null)
   const [scrolled, setScrolled] = useState(false)
+  const [showLangMenu, setShowLangMenu] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,12 +22,12 @@ export function Navbar() {
   }, [])
 
   const navItems = [
-    { label: "Services", href: "/#services" },
-    { label: "Réalisations", href: "/realisations" },
-    { label: "Offre", href: "/#offre" },
-    { label: "Agence", href: "/#agence" },
-    { label: "Humind", href: "/humind" },
-    { label: "Contact", href: "/#contact" },
+    { label: t("nav.services"), href: "/#services" },
+    { label: t("nav.realisations"), href: "/realisations" },
+    { label: t("nav.offre"), href: "/#offre" },
+    { label: t("nav.agence"), href: "/#agence" },
+    { label: t("nav.humind"), href: "/humind" },
+    { label: t("nav.contact"), href: "/#contact" },
   ]
 
   return (
@@ -110,29 +114,141 @@ export function Navbar() {
           ))}
         </div>
 
-        <div className="hidden xl:block">
+        <div className="hidden xl:flex items-center gap-4">
+          {/* Language Switcher - Ultra Premium Design */}
+          <div className="relative">
+            <button
+              onClick={() => setShowLangMenu(!showLangMenu)}
+              className="group relative flex items-center gap-2.5 rounded-full border border-white/25 bg-gradient-to-br from-white/10 via-white/5 to-white/10 px-5 py-2.5 text-sm font-bold uppercase tracking-[0.15em] text-white transition-all duration-500 hover:border-primary/60 hover:bg-gradient-to-br hover:from-primary/20 hover:via-primary/10 hover:to-primary/20 hover:shadow-[0_0_30px_rgba(0,115,255,0.4)] backdrop-blur-xl overflow-hidden"
+              aria-label="Change language"
+            >
+              {/* Animated background glow */}
+              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/30 via-cyan-400/20 to-primary/30 opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500" />
+              
+              {/* Sparkle effect */}
+              <div className="absolute inset-0 rounded-full">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full">
+                  <Sparkles className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-4 w-4 text-cyan-300 opacity-0 group-hover:opacity-100 transition-all duration-500 group-hover:rotate-180 group-hover:scale-125" />
+                </div>
+              </div>
+              
+              {/* Premium Globe Icon */}
+              <div className="relative z-10">
+                <Globe className="h-4 w-4 transition-all duration-500 group-hover:text-cyan-300 group-hover:rotate-12 group-hover:scale-110" />
+                <div className="absolute inset-0 rounded-full bg-cyan-400/30 blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+              </div>
+              
+              {/* Language text with glow */}
+              <span className="relative z-10 transition-all duration-500 group-hover:text-cyan-200 group-hover:drop-shadow-[0_0_8px_rgba(34,211,238,0.6)]">
+                {language}
+              </span>
+              
+              {/* Animated border glow */}
+              <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-primary via-cyan-400 to-primary opacity-0 group-hover:opacity-60 blur-sm transition-opacity duration-500" />
+            </button>
+            
+            {showLangMenu && (
+              <>
+                <div 
+                  className="fixed inset-0 z-40" 
+                  onClick={() => setShowLangMenu(false)}
+                />
+                <div className="absolute right-0 top-full mt-3 z-50 rounded-2xl border border-white/25 bg-gradient-to-br from-black/95 via-black/90 to-black/95 backdrop-blur-2xl overflow-hidden shadow-[0_20px_60px_-12px_rgba(0,0,0,0.8)] animate-in fade-in slide-in-from-top-2 duration-300">
+                  {/* Premium glow effect */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-cyan-400/5 to-primary/10 pointer-events-none" />
+                  
+                  <button
+                    onClick={() => {
+                      setLanguage('fr')
+                      setShowLangMenu(false)
+                    }}
+                    className={`group relative w-full px-6 py-3.5 text-sm font-bold text-white transition-all duration-300 overflow-hidden ${
+                      language === 'fr' 
+                        ? 'bg-gradient-to-r from-primary/25 via-primary/15 to-primary/25 text-cyan-200' 
+                        : 'hover:bg-white/10 text-white/90 hover:text-white'
+                    }`}
+                  >
+                    {/* Active indicator */}
+                    {language === 'fr' && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-primary" />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {language === 'fr' && (
+                        <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                      )}
+                      Français
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </button>
+                  
+                  <div className="h-px bg-gradient-to-r from-transparent via-white/20 to-transparent" />
+                  
+                  <button
+                    onClick={() => {
+                      setLanguage('en')
+                      setShowLangMenu(false)
+                    }}
+                    className={`group relative w-full px-6 py-3.5 text-sm font-bold text-white transition-all duration-300 overflow-hidden ${
+                      language === 'en' 
+                        ? 'bg-gradient-to-r from-primary/25 via-primary/15 to-primary/25 text-cyan-200' 
+                        : 'hover:bg-white/10 text-white/90 hover:text-white'
+                    }`}
+                  >
+                    {/* Active indicator */}
+                    {language === 'en' && (
+                      <div className="absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b from-cyan-400 to-primary" />
+                    )}
+                    <span className="relative z-10 flex items-center gap-2">
+                      {language === 'en' && (
+                        <div className="h-1.5 w-1.5 rounded-full bg-cyan-400 shadow-[0_0_8px_rgba(34,211,238,0.8)]" />
+                      )}
+                      English
+                    </span>
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+
           <Link
-            href="/contact#rendez-vous"
-            className="group relative overflow-hidden rounded-full px-9 py-3 text-sm font-bold uppercase tracking-wide text-white"
-            style={{
-              background: "linear-gradient(135deg, #0073ff 0%, #1aa3ff 50%, #0073ff 100%)",
-              backgroundSize: "200% 200%",
-              animation: "gradientShift 3s ease infinite",
-            }}
+            href="/#rendez-vous"
+            className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
           >
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary via-[#1aa3ff] to-primary opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-60" />
-            <div className="absolute inset-0 translate-x-[-100%] rounded-full bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-transform duration-1000 ease-out group-hover:translate-x-[100%] group-hover:opacity-100" />
-            <span className="relative z-10 flex items-center gap-2.5">
-              Prendre un rendez-vous
-              <svg
-                className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
+            {/* Premium Glassmorphism Background */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-white/10 via-white/5 to-white/10 backdrop-blur-xl border border-white/20 group-hover:border-white/30 transition-all duration-500" />
+            
+            {/* Subtle gradient glow on hover */}
+            <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-primary/20 via-primary/30 to-primary/20 opacity-0 blur-xl group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Animated gradient overlay */}
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-primary/10 via-primary/15 to-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" style={{
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 3s ease infinite',
+            }} />
+            
+            {/* Premium shine effect */}
+            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-out" />
+            </div>
+            
+            {/* Inner glow effect */}
+            <div className="absolute inset-[1px] rounded-full bg-gradient-to-br from-white/5 via-transparent to-white/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+            
+            {/* Content */}
+            <span className="relative z-10 text-sm font-bold text-white/95 group-hover:text-white transition-colors duration-500 tracking-wide">
+              {t("nav.takeAppointment")}
             </span>
+            
+            <svg
+              className="relative z-10 h-4 w-4 text-white/90 group-hover:text-white transition-all duration-500 group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2.5}
+              viewBox="0 0 24 24"
+            >
+              <path strokeLinecap="round" strokeLinejoin="round" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
           </Link>
         </div>
 
@@ -168,29 +284,150 @@ export function Navbar() {
             </Link>
           ))}
 
+          {/* Mobile Language Switcher - Ultra Premium Design */}
+          <div className="relative flex items-center gap-2.5 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-white/10 p-1.5 backdrop-blur-xl">
+            {/* Premium glow effect */}
+            <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-primary/20 via-cyan-400/10 to-primary/20 opacity-0 transition-opacity duration-500" />
+            
+            <button
+              onClick={() => {
+                setLanguage('fr')
+                setIsOpen(false)
+              }}
+              className={`group relative flex-1 rounded-xl px-5 py-3 text-sm font-bold uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden ${
+                language === 'fr' 
+                  ? 'bg-gradient-to-br from-primary/30 via-primary/20 to-primary/30 text-cyan-200 shadow-[0_0_20px_rgba(0,115,255,0.4)] border border-primary/40' 
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {/* Active glow */}
+              {language === 'fr' && (
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-primary/20 to-cyan-400/20 blur-sm" />
+              )}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {language === 'fr' && (
+                  <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+                )}
+                FR
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </button>
+            
+            <button
+              onClick={() => {
+                setLanguage('en')
+                setIsOpen(false)
+              }}
+              className={`group relative flex-1 rounded-xl px-5 py-3 text-sm font-bold uppercase tracking-[0.15em] transition-all duration-500 overflow-hidden ${
+                language === 'en' 
+                  ? 'bg-gradient-to-br from-primary/30 via-primary/20 to-primary/30 text-cyan-200 shadow-[0_0_20px_rgba(0,115,255,0.4)] border border-primary/40' 
+                  : 'text-white/70 hover:text-white hover:bg-white/10'
+              }`}
+            >
+              {/* Active glow */}
+              {language === 'en' && (
+                <div className="absolute inset-0 bg-gradient-to-r from-cyan-400/20 via-primary/20 to-cyan-400/20 blur-sm" />
+              )}
+              <span className="relative z-10 flex items-center justify-center gap-2">
+                {language === 'en' && (
+                  <Sparkles className="h-3.5 w-3.5 text-cyan-300" />
+                )}
+                EN
+              </span>
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </button>
+          </div>
+
           <Link
-            href="/contact#rendez-vous"
-            className="group relative overflow-hidden rounded-full px-10 py-5 text-center text-base font-bold uppercase tracking-wide text-white"
+            href="/#rendez-vous"
+            className="group relative w-full flex items-center justify-between px-7 py-5 rounded-3xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.96] active:duration-150"
             onClick={() => setIsOpen(false)}
             style={{
-              background: "linear-gradient(135deg, #0073ff 0%, #1aa3ff 50%, #0073ff 100%)",
-              backgroundSize: "200% 200%",
-              animation: "gradientShift 3s ease infinite",
+              background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)',
+              backdropFilter: 'blur(24px) saturate(180%)',
+              WebkitBackdropFilter: 'blur(24px) saturate(180%)',
+              border: '1px solid rgba(255,255,255,0.18)',
+              boxShadow: '0 8px 32px 0 rgba(0,0,0,0.12), inset 0 1px 0 0 rgba(255,255,255,0.2)',
             }}
           >
-            <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-primary via-[#1aa3ff] to-primary opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-60" />
-            <div className="absolute inset-0 translate-x-[-100%] rounded-full bg-gradient-to-r from-transparent via-primary/30 to-transparent opacity-0 transition-transform duration-1000 ease-out group-hover:translate-x-[100%] group-hover:opacity-100" />
-            <span className="relative z-10 flex items-center justify-center gap-2.5">
-              Prendre un rendez-vous
+            {/* Ultra-Premium Multi-Layer Glow System */}
+            <div className="absolute -inset-[3px] rounded-3xl opacity-0 group-active:opacity-100 transition-opacity duration-700" style={{
+              background: 'linear-gradient(135deg, rgba(0,115,255,0.4) 0%, rgba(26,163,255,0.4) 50%, rgba(124,51,255,0.4) 100%)',
+              filter: 'blur(24px)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 4s ease infinite',
+            }} />
+            
+            {/* Subtle ambient glow - always present */}
+            <div className="absolute -inset-[1px] rounded-3xl opacity-30 group-active:opacity-60 transition-opacity duration-700" style={{
+              background: 'radial-gradient(circle at 30% 50%, rgba(0,115,255,0.3) 0%, transparent 70%)',
+              filter: 'blur(16px)',
+            }} />
+            
+            {/* Animated gradient overlay - world-class */}
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-active:opacity-100 transition-opacity duration-700" style={{
+              background: 'linear-gradient(135deg, rgba(0,115,255,0.08) 0%, rgba(26,163,255,0.12) 50%, rgba(0,115,255,0.08) 100%)',
+              backgroundSize: '200% 200%',
+              animation: 'gradientShift 5s ease infinite',
+            }} />
+            
+            {/* Premium light sweep - Apple-style */}
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-active:opacity-100 transition-opacity duration-700 overflow-hidden pointer-events-none">
+              <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/40 to-transparent translate-x-[-150%] group-active:translate-x-[150%] transition-transform duration-1200 ease-out" style={{
+                transform: 'skewX(-20deg)',
+              }} />
+            </div>
+            
+            {/* Inner depth layers - premium depth effect */}
+            <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-br from-white/8 via-transparent to-transparent opacity-60 group-active:opacity-100 transition-opacity duration-700" />
+            <div className="absolute inset-[1px] rounded-3xl bg-gradient-to-t from-black/10 via-transparent to-transparent opacity-30" />
+            
+            {/* Top highlight - premium glass effect */}
+            <div className="absolute top-0 left-0 right-0 h-[45%] rounded-t-3xl bg-gradient-to-b from-white/12 via-white/4 to-transparent opacity-70 group-active:opacity-100 transition-opacity duration-700" />
+            
+            {/* Content wrapper */}
+            <div className="relative z-10 flex items-center gap-4 flex-1">
+              {/* Text with premium typography */}
+              <span 
+                className="text-[15px] font-semibold text-white leading-tight tracking-[-0.01em] group-active:text-transparent group-active:bg-clip-text group-active:bg-gradient-to-r group-active:from-white group-active:via-cyan-100 group-active:to-white transition-all duration-700"
+                style={{
+                  textShadow: '0 1px 2px rgba(0,0,0,0.3), 0 0 20px rgba(255,255,255,0.1)',
+                  letterSpacing: '0.02em',
+                  fontWeight: 600,
+                }}
+              >
+                {t("nav.takeAppointment")}
+              </span>
+            </div>
+            
+            {/* Arrow container with premium effects */}
+            <div className="relative z-10 flex items-center justify-center w-8 h-8 rounded-full bg-white/5 group-active:bg-white/10 transition-all duration-700" style={{
+              boxShadow: 'inset 0 1px 0 0 rgba(255,255,255,0.15), 0 1px 3px rgba(0,0,0,0.2)',
+            }}>
               <svg
-                className="h-4 w-4 transition-transform duration-500 group-hover:translate-x-1"
+                className="h-4 w-4 text-white/90 group-active:text-white transition-all duration-700 group-active:translate-x-0.5"
                 fill="none"
                 stroke="currentColor"
+                strokeWidth={2.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
                 viewBox="0 0 24 24"
+                style={{
+                  filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.3))',
+                }}
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                <path d="M5 12h14M12 5l7 7-7 7" />
               </svg>
-            </span>
+              
+              {/* Arrow glow on active */}
+              <div className="absolute inset-0 rounded-full bg-primary opacity-0 blur-md group-active:opacity-40 transition-opacity duration-700" />
+            </div>
+            
+            {/* Subtle border glow on active */}
+            <div className="absolute inset-0 rounded-3xl opacity-0 group-active:opacity-100 transition-opacity duration-700 pointer-events-none" style={{
+              border: '1px solid rgba(255,255,255,0.3)',
+              boxShadow: '0 0 0 1px rgba(255,255,255,0.1) inset, 0 0 24px rgba(0,115,255,0.2)',
+            }} />
           </Link>
         </div>
       </div>

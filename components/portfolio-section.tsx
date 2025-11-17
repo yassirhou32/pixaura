@@ -5,86 +5,89 @@ import Image from "next/image"
 import Link from "next/link"
 import { ArrowRight, ArrowUpRight, Sparkles } from "lucide-react"
 import { Reveal } from "@/components/reveal"
-
-const latestProjects = [
-  {
-    id: 1,
-    client: "Touraine Cars",
-    title: "Halloween — Shooting Éphémère",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Social", "Event"],
-    video: "/Banque d_images/halowen.mp4",
-    poster: "/Banque d_images/Copie de IMG_7149.jpg",
-  },
-  {
-    id: 2,
-    client: "Mr Microbe",
-    title: "Projet Artistique & Thérapeutique",
-    category: "Photo",
-    tags: ["Photo", "Social", "Branding"],
-    video: null,
-    poster: "/Banque d_images/art1.jpg",
-  },
-  {
-    id: 3,
-    client: "BSK Immobilier",
-    title: "Interviews Conseillers Immobiliers",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Social", "Corporate"],
-    video: "/Banque d_images/Immobilier.mp4",
-    poster: "/Banque d_images/Copie de M7_00487.jpg",
-  },
-  {
-    id: 4,
-    client: "Castles Rally",
-    title: "Remerciements 2025",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Photo", "Social"],
-    video: "/Banque d_images/rally1.mp4",
-    poster: "/Banque d_images/Copie de DSC04796.jpg",
-  },
-  {
-    id: 5,
-    client: "Castles Rally",
-    title: "Première Boucle 2025",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Photo", "Event"],
-    video: "/Banque d_images/rally2.mp4",
-    poster: "/Banque d_images/Copie de M7_02930.jpg",
-  },
-  {
-    id: 6,
-    client: "Vouvray/Chenin",
-    title: "Aménagement Sur-Mesure",
-    category: "Photo",
-    tags: ["Photo", "Branding", "Design"],
-    video: null,
-    poster: "/Banque d_images/Copie de M7_09197.jpg",
-  },
-  {
-    id: 7,
-    client: "Stradale Events",
-    title: "Interview Exclusive Humind",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Social", "Podcast"],
-    video: "/Banque d_images/pod1.mp4",
-    poster: "/Banque d_images/Copie de M7_03194.jpg",
-  },
-  {
-    id: 8,
-    client: "BSD / UFC Paris",
-    title: "Stage MMA — God of War",
-    category: "Film / Vidéo",
-    tags: ["Film / Vidéo", "Photo", "Social"],
-    video: "/Banque d_images/stageMMa.mp4",
-    poster: "/Banque d_images/StageUfc.jpg",
-  },
-]
+import { useTranslation } from "@/contexts/translation-context"
 
 export function PortfolioSection() {
+  const { t } = useTranslation()
+  
+  const latestProjects = [
+    {
+      id: 1,
+      client: "Touraine Cars",
+      title: t("portfolio.project1TitleAlt"), // "Expérience de Conduite Nocturne" (FR) / "Night Drive Experience" (EN)
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.tagSocial"), t("portfolio.tagEvent")],
+      video: "/Banque d_images/halowen.mp4",
+      poster: "/Banque d_images/Copie de IMG_7149.jpg",
+    },
+    {
+      id: 2,
+      client: "Mr Microbe",
+      title: t("portfolio.project2Title"),
+      category: t("portfolio.categoryPhoto"),
+      tags: [t("portfolio.categoryPhoto"), t("portfolio.tagSocial"), t("portfolio.tagBranding")],
+      video: null,
+      poster: "/Banque d_images/art1.jpg",
+    },
+    {
+      id: 3,
+      client: "BSK Immobilier",
+      title: t("portfolio.project3TitleAlt2"), // "Résidences Lumière" (FR) / "Light Residences" (EN)
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.tagSocial"), t("portfolio.tagCorporate")],
+      video: "/Banque d_images/Immobilier.mp4",
+      poster: "/Banque d_images/Copie de M7_00487.jpg",
+    },
+    {
+      id: 4,
+      client: "Castles Rally",
+      title: t("portfolio.project4Title"),
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.categoryPhoto"), t("portfolio.tagSocial")],
+      video: "/Banque d_images/rally1.mp4",
+      poster: "/Banque d_images/Copie de DSC04796.jpg",
+    },
+    {
+      id: 5,
+      client: "Castles Rally",
+      title: t("portfolio.project5Title"),
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.categoryPhoto"), t("portfolio.tagEvent")],
+      video: "/Banque d_images/rally2.mp4",
+      poster: "/Banque d_images/Copie de M7_02930.jpg",
+    },
+    {
+      id: 6,
+      client: "Vouvray/Chenin",
+      title: t("portfolio.project6Title"),
+      category: t("portfolio.categoryPhoto"),
+      tags: [t("portfolio.categoryPhoto"), t("portfolio.tagBranding"), t("portfolio.tagDesign")],
+      video: null,
+      poster: "/Banque d_images/Copie de M7_09197.jpg",
+    },
+    {
+      id: 7,
+      client: "Stradale Events",
+      title: t("portfolio.project7Title"),
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.tagSocial"), t("portfolio.tagPodcast")],
+      video: "/Banque d_images/pod1.mp4",
+      poster: "/Banque d_images/Copie de M7_03194.jpg",
+    },
+    {
+      id: 8,
+      client: "BSD / UFC Paris",
+      title: t("portfolio.project8TitleAlt"), // "Stage d'Immersion MMA" (FR) / "MMA Training Immersion" (EN)
+      category: t("portfolio.categoryFilmVideo"),
+      tags: [t("portfolio.categoryFilmVideo"), t("portfolio.categoryPhoto"), t("portfolio.tagSocial")],
+      video: "/Banque d_images/stageMMa.mp4",
+      poster: "/Banque d_images/StageUfc.jpg",
+    },
+  ]
   const [activeId, setActiveId] = useState<number>(latestProjects[0]?.id ?? 0)
   const [previewTransform, setPreviewTransform] = useState("translate3d(0, 0, 0)")
   const [stageHeight, setStageHeight] = useState<number | undefined>(undefined)
+  const [isDesktop, setIsDesktop] = useState<boolean>(false)
   const videoRef = useRef<HTMLVideoElement | null>(null)
 
   const listRef = useRef<HTMLDivElement>(null)
@@ -93,6 +96,54 @@ export function PortfolioSection() {
   const rowRefs = useRef<Record<number, HTMLButtonElement | null>>({})
 
   const activeProject = latestProjects.find((project) => project.id === activeId) ?? latestProjects[0]
+
+  const renderPreviewCard = (withRef: boolean) => (
+    <div ref={withRef ? previewRef : undefined} className="latest-preview-card">
+      <div className="latest-preview-media">
+        {activeProject?.video ? (
+          <video
+            ref={videoRef}
+            key={`video-${activeProject.id}`}
+            poster={activeProject.poster}
+            muted
+            loop
+            playsInline
+            preload="none"
+            style={{
+              opacity: 1,
+              willChange: 'auto',
+              pointerEvents: 'none'
+            }}
+          />
+        ) : (
+          <Image
+            src={activeProject?.poster ?? "/placeholder.jpg"}
+            alt={activeProject?.title ?? "Project preview"}
+            fill
+            className="object-cover"
+            priority
+          />
+        )}
+        <div className="latest-preview-glass" />
+      </div>
+
+      <div className="latest-preview-meta">
+        <div className="latest-preview-tags">
+          <span>{activeProject?.client}</span>
+          <span className="divider" />
+          <span>{activeProject?.category}</span>
+        </div>
+        <h3>{activeProject?.title}</h3>
+        <Link
+          href="/realisations"
+          className="latest-preview-link"
+        >
+          {t("portfolio.exploreProject")}
+          <ArrowUpRight className="h-4 w-4" />
+        </Link>
+      </div>
+    </div>
+  )
 
   const updatePreviewPosition = (projectId: number) => {
     if (!listRef.current || !previewRef.current || !previewStageRef.current) return
@@ -109,7 +160,10 @@ export function PortfolioSection() {
     const clamped = Math.max(0, Math.min(target, listHeight - previewHeight))
 
     setPreviewTransform(`translate3d(0, ${clamped}px, 0)`)
-    setStageHeight(listHeight)
+    // Only sync stage height on desktop to avoid mobile gap
+    if (isDesktop) {
+      setStageHeight(listHeight)
+    }
   }
 
   const isChangingRef = useRef(false)
@@ -145,6 +199,31 @@ export function PortfolioSection() {
   }
 
   useEffect(() => {
+    // Track viewport to toggle desktop-only behavior
+    const mq = window.matchMedia("(min-width: 1024px)")
+    const handleChange = (e: MediaQueryListEvent | MediaQueryList) => {
+      const desktop = e.matches
+      setIsDesktop(desktop)
+      // Reset stage height when switching to mobile to remove any inline minHeight
+      if (!desktop) {
+        setStageHeight(undefined)
+        setPreviewTransform("translate3d(0, 0, 0)")
+      } else {
+        // Recompute on entering desktop
+        requestAnimationFrame(() => updatePreviewPosition(activeId))
+      }
+    }
+    // Initialize
+    handleChange(mq)
+    // Listen for changes
+    const listener = (e: MediaQueryListEvent) => handleChange(e)
+    mq.addEventListener?.("change", listener)
+    return () => {
+      mq.removeEventListener?.("change", listener)
+    }
+  }, [activeId])
+
+  useEffect(() => {
     // Defer position update to avoid blocking
     let rafId: number | null = null
     if ('requestIdleCallback' in window) {
@@ -169,7 +248,9 @@ export function PortfolioSection() {
       timeoutId = setTimeout(() => {
         requestAnimationFrame(() => {
           updatePreviewPosition(activeId)
-          setStageHeight(listRef.current?.getBoundingClientRect().height)
+          if (isDesktop) {
+            setStageHeight(listRef.current?.getBoundingClientRect().height)
+          }
         })
       }, 50)
     })
@@ -178,7 +259,7 @@ export function PortfolioSection() {
       clearTimeout(timeoutId)
       observer.disconnect()
     }
-  }, [activeId])
+  }, [activeId, isDesktop])
 
   useEffect(() => {
     let timeoutId: NodeJS.Timeout
@@ -289,23 +370,23 @@ export function PortfolioSection() {
             <div className="space-y-4 flex-1 max-w-6xl">
               <span className="inline-flex w-fit items-center gap-3 rounded-full border border-white/20 bg-white/10 px-6 py-2 text-sm font-semibold uppercase tracking-[0.5em] text-white shadow-[0_0_35px_rgba(89,129,255,0.25)] backdrop-blur-md">
                 <Sparkles className="h-3.5 w-3.5 text-sky-300" />
-                Projets récents
+                {t("portfolio.badge")}
               </span>
               <h2 className="latest-heading">
-                Scenes premium
+                {t("portfolio.title")}
                 <br />
-                pour les marques audacieuses.
+                {t("portfolio.titleLine2")}
               </h2>
               <p className="latest-subheading">
-                Survolez une réalisation pour dévoiler son univers.
+                {t("portfolio.description")}
                 <br />
                 <span className="latest-subheading-highlight">
-                  Chaque projet que nous pilotons combine narration en temps réel et craft digital pour livrer des expériences mémorables.
+                  {t("portfolio.descriptionHighlight")}
                 </span>
               </p>
             </div>
             <div className="flex-shrink-0">
-              <span className="latest-count">+{String(latestProjects.length).padStart(2, "0")} projets</span>
+              <span className="latest-count">+{String(latestProjects.length).padStart(2, "0")} {t("portfolio.projectsCount")}</span>
             </div>
           </div>
         </Reveal>
@@ -314,55 +395,12 @@ export function PortfolioSection() {
           <div
             className="latest-preview-stage"
             ref={previewStageRef}
-            style={stageHeight ? { minHeight: stageHeight } : undefined}
+            // Apply minHeight only on desktop to prevent large gaps on mobile
+            style={isDesktop && stageHeight ? { minHeight: stageHeight } : undefined}
           >
             <div className="latest-preview-wrapper" style={{ transform: previewTransform }}>
               <Reveal delay={100} className="latest-preview-reveal">
-                <div ref={previewRef} className="latest-preview-card">
-                  <div className="latest-preview-media">
-                    {activeProject?.video ? (
-                      <video
-                        ref={videoRef}
-                        key={`video-${activeProject.id}`}
-                        poster={activeProject.poster}
-                        muted
-                        loop
-                        playsInline
-                        preload="none"
-                        style={{
-                          opacity: 1,
-                          willChange: 'auto',
-                          pointerEvents: 'none'
-                        }}
-                      />
-                    ) : (
-                      <Image
-                        src={activeProject?.poster ?? "/placeholder.jpg"}
-                        alt={activeProject?.title ?? "Project preview"}
-                        fill
-                        className="object-cover"
-                        priority
-                      />
-                    )}
-                    <div className="latest-preview-glass" />
-                  </div>
-
-                  <div className="latest-preview-meta">
-                    <div className="latest-preview-tags">
-                      <span>{activeProject?.client}</span>
-                      <span className="divider" />
-                      <span>{activeProject?.category}</span>
-                    </div>
-                    <h3>{activeProject?.title}</h3>
-                    <Link
-                      href="/realisations"
-                      className="latest-preview-link"
-                    >
-                      Explorer le projet
-                      <ArrowUpRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
+                {renderPreviewCard(true)}
               </Reveal>
             </div>
           </div>
@@ -398,6 +436,47 @@ export function PortfolioSection() {
                           ))}
                         </div>
                       </div>
+                      {!isDesktop && (
+                        <div className="latest-card-thumb">
+                          <div className="latest-card-thumb-media">
+                            {project.video ? (
+                              <video
+                                src={project.video}
+                                poster={project.poster}
+                                muted
+                                loop
+                                autoPlay
+                                playsInline
+                                preload="metadata"
+                              />
+                            ) : (
+                              <Image
+                                src={project.poster}
+                                alt={project.title}
+                                fill
+                                className="object-cover"
+                              />
+                            )}
+                          </div>
+                          <div className="latest-card-thumb-meta">
+                            <div className="latest-card-thumb-tags">
+                              <span>{project.client}</span>
+                              <span className="divider" />
+                              <span>{project.category}</span>
+                            </div>
+                            <div className="latest-card-thumb-title">
+                              {project.title}
+                            </div>
+                            <Link
+                              href="/realisations"
+                              className="latest-card-thumb-link"
+                            >
+                              {t("portfolio.exploreProject")}
+                              <ArrowUpRight className="h-3.5 w-3.5" />
+                            </Link>
+                          </div>
+                        </div>
+                      )}
                     </button>
                   </Reveal>
                 )
@@ -408,7 +487,7 @@ export function PortfolioSection() {
                 href="/realisations"
                 className="group inline-flex items-center justify-center gap-3 rounded-full border border-white/25 bg-white/5 px-8 py-3 text-xs font-semibold uppercase tracking-[0.3em] text-white transition duration-300 hover:border-white/40 hover:bg-white/10"
               >
-                Voir toutes les réalisations
+                {t("portfolio.viewAll")}
                 <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
               </Link>
             </Reveal>

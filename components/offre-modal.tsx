@@ -4,6 +4,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden"
 import Image from "next/image"
 import { X } from "lucide-react"
+import { useTranslation } from "@/contexts/translation-context"
 
 interface OffreModalProps {
   open: boolean
@@ -19,6 +20,8 @@ interface OffreModalProps {
 }
 
 export function OffreModal({ open, onOpenChange, offre }: OffreModalProps) {
+  const { t } = useTranslation()
+  
   if (!offre) return null
 
   return (
@@ -69,7 +72,7 @@ export function OffreModal({ open, onOpenChange, offre }: OffreModalProps) {
             {/* Présentation */}
             <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
               <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                Présentation
+                {t("offreHome.modalPresentation")}
               </h3>
               <p className="text-sm text-white/70 leading-relaxed">
                 {offre.intro}
@@ -79,7 +82,7 @@ export function OffreModal({ open, onOpenChange, offre }: OffreModalProps) {
             {/* Points clés */}
             <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
               <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                Points clés
+                {t("offreHome.modalKeyPoints")}
               </h3>
               <ul className="space-y-3">
                 {offre.points.map((point, index) => (
@@ -94,7 +97,7 @@ export function OffreModal({ open, onOpenChange, offre }: OffreModalProps) {
             {/* En résumé */}
             <div className="rounded-[24px] border border-white/15 bg-white/8 p-6 shadow-lg shadow-black/40 backdrop-blur-xl">
               <h3 className="text-lg font-semibold uppercase tracking-[0.25em] text-white/80 mb-3">
-                En résumé
+                {t("offreHome.modalSummary")}
               </h3>
               <p className="text-sm text-white/70 leading-relaxed italic">
                 {offre.conclusion}

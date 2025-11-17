@@ -2,6 +2,7 @@ import type React from "react"
 import type { Metadata } from "next"
 import { Geist, Geist_Mono, Space_Grotesk } from "next/font/google"
 import "./globals.css"
+import { TranslationProvider } from "@/contexts/translation-context"
 
 const geist = Geist({ subsets: ["latin"] })
 const geistMono = Geist_Mono({ subsets: ["latin"] })
@@ -51,7 +52,9 @@ export default function RootLayout({
       <body
         className={`${geist.className} ${spaceGrotesk.variable} antialiased bg-background text-foreground`}
       >
-        {children}
+        <TranslationProvider>
+          {children}
+        </TranslationProvider>
       </body>
     </html>
   )

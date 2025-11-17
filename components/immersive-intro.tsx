@@ -386,79 +386,79 @@ export function ImmersiveIntro({ onComplete }: ImmersiveIntroProps = {}) {
       <div className="absolute inset-0 bg-[url('/Banque d_images/noise.png')] opacity-[0.08] mix-blend-overlay" />
 
       {stage === "loading" && (
-        <div className="relative z-10 flex h-full w-full flex-col justify-between px-8 py-14 text-white md:px-16">
+        <div className="relative z-10 flex h-full w-full flex-col justify-between px-4 py-6 sm:px-8 sm:py-14 text-white md:px-16">
           <div className="pointer-events-none absolute inset-x-0 top-[-14%] mx-auto h-[520px] w-[520px] rounded-full bg-[radial-gradient(circle,_rgba(68,109,255,0.28),_transparent_78%)] blur-[160px]" />
           <div className="pointer-events-none absolute inset-x-0 bottom-[-18%] mx-auto h-[540px] w-[540px] rounded-full bg-[radial-gradient(circle,_rgba(255,206,92,0.32),_transparent_80%)] blur-[190px]" />
 
-          <header className="flex items-center justify-between text-[11px] font-semibold uppercase tracking-[0.52em] text-white/70">
-            <span className="flex items-center gap-3">
-              <span className="flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-[9px] tracking-[0.5em] text-white">
-                pl
+          <header className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between text-[10px] sm:text-[11px] font-semibold uppercase tracking-[0.4em] sm:tracking-[0.52em] text-white/70">
+            <span className="flex items-center gap-2 sm:gap-3">
+              <span className="flex h-8 w-8 sm:h-9 sm:w-9 items-center justify-center rounded-full border border-white/25 bg-white/10 text-[8px] sm:text-[9px] tracking-[0.4em] sm:tracking-[0.5em] text-white">
+                PL
               </span>
-              immersion sequence
+              <span className="text-[10px] sm:text-[11px] leading-tight">IMMERSION SEQUENCE</span>
             </span>
-            <div className="flex items-center gap-3 text-white/60">
-              <span className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.5em] text-white/80">
-                sync {progressFormatted}%
+            <div className="flex items-center gap-2 sm:gap-3 text-white/60">
+              <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 sm:px-4 sm:py-1.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.35em] sm:tracking-[0.5em] text-white/80 whitespace-nowrap">
+                SYNC {progressFormatted}%
               </span>
-              <span className="rounded-full border border-white/20 bg-white/5 px-4 py-1.5 text-[10px] font-medium uppercase tracking-[0.5em]">
-                aura locked
+              <span className="rounded-full border border-white/20 bg-white/5 px-3 py-1 sm:px-4 sm:py-1.5 text-[9px] sm:text-[10px] font-medium uppercase tracking-[0.35em] sm:tracking-[0.5em] whitespace-nowrap">
+                AURA LOCKED
               </span>
             </div>
           </header>
 
-          <main className="relative flex flex-1 flex-col items-center justify-center">
-            <div className="relative flex flex-col items-center gap-12">
-              <div className="flex flex-col items-center gap-3 text-xs uppercase tracking-[0.62em] text-white/50">
-                <span>immersive loading sequence</span>
-                <span className="text-white/75">préparez l&apos;entrée pixaura</span>
+          <main className="relative flex flex-1 flex-col items-center justify-center px-4">
+            <div className="relative flex flex-col items-center gap-8 sm:gap-12">
+              <div className="flex flex-col items-center gap-2 sm:gap-3 text-[10px] sm:text-xs uppercase tracking-[0.5em] sm:tracking-[0.62em] text-white/50 text-center">
+                <span className="leading-tight">IMMERSIVE LOADING SEQUENCE</span>
+                <span className="text-white/75 text-[11px] sm:text-xs leading-tight">PRÉPAREZ L&apos;ENTRÉE PIXAURA</span>
               </div>
 
-              <div className="relative flex items-center justify-center">
-                <div className="relative h-[340px] w-[340px] rounded-full border border-white/20 bg-white/5 backdrop-blur-3xl shadow-[0_40px_70px_rgba(8,14,46,0.55)]">
-                  <div className="absolute inset-6 rounded-full border border-white/15 bg-black/55 backdrop-blur-3xl shadow-[inset_0_0_65px_rgba(17,33,84,0.55)]" />
-                  <div className="absolute inset-6 rounded-full opacity-90" style={{ background: progressCircleBackground }} />
-                  <div className="absolute inset-6 rounded-full">
+              <div className="relative flex items-center justify-center w-full max-w-[340px] aspect-square">
+                <div className="relative w-full h-full rounded-full border border-white/20 bg-white/5 backdrop-blur-3xl shadow-[0_40px_70px_rgba(8,14,46,0.55)]">
+                  <div className="absolute inset-[4%] sm:inset-6 rounded-full border border-white/15 bg-black/55 backdrop-blur-3xl shadow-[inset_0_0_65px_rgba(17,33,84,0.55)]" />
+                  <div className="absolute inset-[4%] sm:inset-6 rounded-full opacity-90" style={{ background: progressCircleBackground }} />
+                  <div className="absolute inset-[4%] sm:inset-6 rounded-full">
                     <div
                       className="absolute left-1/2 top-1/2 h-full w-full -translate-x-1/2 -translate-y-1/2"
                       style={{ transform: `rotate(${progressAngle}deg)` }}
                     >
-                      <div className="absolute left-1/2 top-[18px] h-4 w-4 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(255,224,150,0.98),_rgba(255,164,63,0.8))] shadow-[0_0_25px_rgba(255,193,79,0.95)]" />
+                      <div className="absolute left-1/2 top-[5%] sm:top-[18px] h-3 w-3 sm:h-4 sm:w-4 -translate-x-1/2 rounded-full bg-[radial-gradient(circle,_rgba(255,224,150,0.98),_rgba(255,164,63,0.8))] shadow-[0_0_25px_rgba(255,193,79,0.95)]" />
                     </div>
                   </div>
-                  <div className="absolute inset-[102px] rounded-full border border-white/25 bg-[radial-gradient(circle,_rgba(24,35,72,0.9),_transparent_85%)] backdrop-blur-xl" />
-                  <div className="absolute inset-[118px] flex flex-col items-center justify-center gap-4 text-center uppercase">
-                    <span className="text-[11px] tracking-[0.55em] text-white/50">status</span>
-                    <span className="text-[clamp(44px,7vw,70px)] font-black tracking-tight text-white drop-shadow-[0_0_35px_rgba(255,196,111,0.45)]">
+                  <div className="absolute inset-[30%] sm:inset-[102px] rounded-full border border-white/25 bg-[radial-gradient(circle,_rgba(24,35,72,0.9),_transparent_85%)] backdrop-blur-xl" />
+                  <div className="absolute inset-[35%] sm:inset-[118px] flex flex-col items-center justify-center gap-3 sm:gap-4 text-center uppercase">
+                    <span className="text-[9px] sm:text-[11px] tracking-[0.4em] sm:tracking-[0.55em] text-white/50 leading-tight">STATUS</span>
+                    <span className="text-[clamp(32px,12vw,70px)] font-black tracking-tight text-white drop-shadow-[0_0_35px_rgba(255,196,111,0.45)] leading-none">
                       {progressFormatted}%
                     </span>
-                    <span className="text-[10px] tracking-[0.48em] text-white/55">experience boot sequence</span>
+                    <span className="text-[8px] sm:text-[10px] tracking-[0.35em] sm:tracking-[0.48em] text-white/55 leading-tight px-2">EXPERIENCE BOOT SEQUENCE</span>
                   </div>
-                  <div className="absolute inset-[36px] rounded-full border border-white/15" />
-                  <div className="absolute inset-[36px] rounded-full border border-white/10 border-dashed opacity-40 animate-[spin_14s_linear_infinite]" />
-                  <div className="absolute inset-[150px] flex items-center justify-between px-5 text-[9px] uppercase tracking-[0.38em] text-white/55">
+                  <div className="absolute inset-[10%] sm:inset-[36px] rounded-full border border-white/15" />
+                  <div className="absolute inset-[10%] sm:inset-[36px] rounded-full border border-white/10 border-dashed opacity-40 animate-[spin_14s_linear_infinite]" />
+                  <div className="absolute inset-[44%] sm:inset-[150px] flex items-center justify-between px-3 sm:px-5 text-[8px] sm:text-[9px] uppercase tracking-[0.3em] sm:tracking-[0.38em] text-white/55">
                     <span>0%</span>
                     <span>100%</span>
                   </div>
                 </div>
                 <div className="pointer-events-none absolute inset-0 -z-10 rounded-full bg-[radial-gradient(circle,_rgba(92,110,255,0.38),_transparent_70%)] blur-2xl animate-[pulse_4.5s_ease-in-out_infinite]" />
                 <div className="pointer-events-none absolute inset-0 -z-20 animate-[spin_18s_linear_infinite] rounded-full border border-white/10 opacity-40" />
-                <div className="pointer-events-none absolute inset-[-18px] -z-30 h-[380px] w-[380px] rounded-full border border-white/20 opacity-30 blur-sm" />
+                <div className="pointer-events-none absolute inset-[-5%] -z-30 w-[110%] h-[110%] rounded-full border border-white/20 opacity-30 blur-sm" />
               </div>
 
-              <div className="flex flex-col items-center gap-3 text-sm uppercase tracking-[0.48em] text-white/70">
-                <span>{currentPhase.headline}</span>
-                <span className="text-white/50">{currentPhase.detail}</span>
+              <div className="flex flex-col items-center gap-2 sm:gap-3 text-[11px] sm:text-sm uppercase tracking-[0.4em] sm:tracking-[0.48em] text-white/70 text-center px-4">
+                <span className="leading-tight">{currentPhase.headline}</span>
+                <span className="text-white/50 text-[10px] sm:text-sm leading-tight">{currentPhase.detail}</span>
               </div>
             </div>
           </main>
 
-          <footer className="flex items-center justify-between text-[10px] uppercase tracking-[0.48em] text-white/60">
+          <footer className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between text-[9px] sm:text-[10px] uppercase tracking-[0.35em] sm:tracking-[0.48em] text-white/60">
             <span className="flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-[radial-gradient(circle,_rgba(111,217,255,0.95),_rgba(64,135,255,0.85))] shadow-[0_0_16px_rgba(96,180,255,0.95)]" />
-              systèmes synchronisés • {progressFormatted}%
+              <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-[radial-gradient(circle,_rgba(111,217,255,0.95),_rgba(64,135,255,0.85))] shadow-[0_0_16px_rgba(96,180,255,0.95)] flex-shrink-0" />
+              <span className="leading-tight">SYSTÈMES SYNCHRONISÉS • {progressFormatted}%</span>
             </span>
-            <span>sound design activé • écoute conseillée</span>
+            <span className="leading-tight">SOUND DESIGN ACTIVÉ • ÉCOUTE CONSEILLÉE</span>
           </footer>
         </div>
       )}

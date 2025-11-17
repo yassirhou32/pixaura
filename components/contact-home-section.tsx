@@ -4,6 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { ArrowRight, Calendar, Check, ChevronRight } from "lucide-react"
 import { Reveal } from "@/components/reveal"
+import { useTranslation } from "@/contexts/translation-context"
 
 type FormData = {
   besoin: string
@@ -14,6 +15,7 @@ type FormData = {
 }
 
 export function ContactHomeSection() {
+  const { t } = useTranslation()
   const [currentStep, setCurrentStep] = useState(1)
   const [submitted, setSubmitted] = useState(false)
   const [formData, setFormData] = useState<FormData>({
@@ -97,12 +99,12 @@ export function ContactHomeSection() {
                 fontFamily: 'Montserrat, sans-serif',
                 letterSpacing: '-0.02em',
               }}>
-                Envoyez-nous vos coordonnées
+                {t("contactHome.title")}
               </h2>
               <p className="text-xl text-white/70 max-w-2xl mx-auto" style={{ 
                 fontFamily: 'Montserrat, sans-serif',
               }}>
-                Décrivez votre projet et nous vous recontacterons sous 48h.
+                {t("contactHome.description")}
               </p>
             </div>
 
@@ -119,17 +121,17 @@ export function ContactHomeSection() {
                       <Check className="w-10 h-10 text-black" />
                     </div>
                     <h3 className="text-3xl font-black text-white mb-4" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                      Merci !
+                      {t("contactHome.thankYou")}
                     </h3>
                     <p className="text-lg text-white/80 mb-8" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                      Notre équipe vous recontactera sous 48 h.
+                      {t("contactHome.contactWithin48h")}
                     </p>
                     <Link 
                       href="/"
                       className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-cyan-400 text-white font-bold rounded-full hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,115,255,0.3)] hover:shadow-[0_0_30px_rgba(0,115,255,0.5)]"
                       style={{ fontFamily: 'Montserrat, sans-serif' }}
                     >
-                      Retour à l'accueil
+                      {t("contactHome.backToHome")}
                       <ArrowRight className="w-5 h-5" />
                     </Link>
                   </div>
@@ -178,11 +180,11 @@ export function ContactHomeSection() {
                   {currentStep === 1 && (
                     <div className="space-y-6 animate-fadeIn">
                       <h3 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Votre besoin
+                        {t("contactHome.step1")}
                       </h3>
                       <div>
                         <label className="block text-sm font-semibold text-white/80 mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                          Décrivez votre projet en détail *
+                          {t("contactHome.describeProject")}
                         </label>
                         <textarea
                           name="besoin"
@@ -191,7 +193,7 @@ export function ContactHomeSection() {
                           required
                           rows={8}
                           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 text-white placeholder-white/40 resize-none backdrop-blur-sm hover:border-white/20"
-                          placeholder="Décrivez votre projet en détail..."
+                          placeholder={t("contactHome.describePlaceholder")}
                         />
                       </div>
                     </div>
@@ -201,11 +203,11 @@ export function ContactHomeSection() {
                   {currentStep === 2 && (
                     <div className="space-y-6 animate-fadeIn">
                       <h3 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Budget estimé
+                        {t("contactHome.step2")}
                       </h3>
                       <div>
                         <label className="block text-sm font-semibold text-white/80 mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                          Budget estimé *
+                          {t("contactHome.estimatedBudget")}
                         </label>
                         <select
                           name="budget"
@@ -214,11 +216,11 @@ export function ContactHomeSection() {
                           required
                           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 text-white backdrop-blur-sm hover:border-white/20 cursor-pointer"
                         >
-                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Sélectionnez une gamme</option>
-                          <option value="under-5k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Moins de 5k€</option>
-                          <option value="5k-15k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>5k€ - 15k€</option>
-                          <option value="15k-50k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>15k€ - 50k€</option>
-                          <option value="over-50k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Plus de 50k€</option>
+                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.selectRange")}</option>
+                          <option value="under-5k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.under5k")}</option>
+                          <option value="5k-15k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.range5k15k")}</option>
+                          <option value="15k-50k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.range15k50k")}</option>
+                          <option value="over-50k" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.over50k")}</option>
                         </select>
                       </div>
                     </div>
@@ -228,11 +230,11 @@ export function ContactHomeSection() {
                   {currentStep === 3 && (
                     <div className="space-y-6 animate-fadeIn">
                       <h3 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Délai souhaité
+                        {t("contactHome.step3")}
                       </h3>
                       <div>
                         <label className="block text-sm font-semibold text-white/80 mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                          Délai souhaité *
+                          {t("contactHome.desiredTimeline")}
                         </label>
                         <select
                           name="delai"
@@ -241,11 +243,11 @@ export function ContactHomeSection() {
                           required
                           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 text-white backdrop-blur-sm hover:border-white/20 cursor-pointer"
                         >
-                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Sélectionnez un délai</option>
-                          <option value="1-2weeks" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>1 à 2 semaines</option>
-                          <option value="3-4weeks" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>3 à 4 semaines</option>
-                          <option value="1-3months" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>1 à 3 mois</option>
-                          <option value="flexible" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Flexible</option>
+                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.selectTimeline")}</option>
+                          <option value="1-2weeks" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.timeline1to2weeks")}</option>
+                          <option value="3-4weeks" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.timeline3to4weeks")}</option>
+                          <option value="1-3months" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.timeline1to3months")}</option>
+                          <option value="flexible" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.flexible")}</option>
                         </select>
                       </div>
                     </div>
@@ -255,11 +257,11 @@ export function ContactHomeSection() {
                   {currentStep === 4 && (
                     <div className="space-y-6 animate-fadeIn">
                       <h3 className="text-2xl font-bold text-white mb-6" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                        Secteur d'activité
+                        {t("contactHome.step4")}
                       </h3>
                       <div>
                         <label className="block text-sm font-semibold text-white/80 mb-2" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                          Secteur d'activité *
+                          {t("contactHome.sector")}
                         </label>
                         <select
                           name="secteur"
@@ -268,14 +270,14 @@ export function ContactHomeSection() {
                           required
                           className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/20 transition-all duration-300 text-white backdrop-blur-sm hover:border-white/20 cursor-pointer"
                         >
-                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Sélectionnez un secteur</option>
-                          <option value="immobilier" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Immobilier</option>
-                          <option value="automobile" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Automobile</option>
-                          <option value="sport" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Sport</option>
-                          <option value="beaute" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Beauté</option>
-                          <option value="restauration" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Restauration</option>
-                          <option value="tech" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Tech</option>
-                          <option value="other" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>Autre</option>
+                          <option value="" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.selectSector")}</option>
+                          <option value="immobilier" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.realEstate")}</option>
+                          <option value="automobile" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.automotive")}</option>
+                          <option value="sport" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.sport")}</option>
+                          <option value="beaute" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.beauty")}</option>
+                          <option value="restauration" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.restaurant")}</option>
+                          <option value="tech" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.tech")}</option>
+                          <option value="other" style={{ backgroundColor: '#1a1a1a', color: '#ffffff' }}>{t("contactHome.other")}</option>
                         </select>
                       </div>
                       <div className="flex items-start gap-3 pt-4">
@@ -288,7 +290,7 @@ export function ContactHomeSection() {
                           className="mt-1 w-5 h-5 rounded border-white/20 bg-white/5 text-primary focus:ring-2 focus:ring-primary/20"
                         />
                         <label className="text-sm text-white/80" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                          En envoyant ce formulaire, vous acceptez notre politique de confidentialité. *
+                          {t("contactHome.privacyAccept")}
                         </label>
                       </div>
                     </div>
@@ -303,7 +305,7 @@ export function ContactHomeSection() {
                         className="px-6 py-3 border border-white/20 text-white rounded-full hover:border-primary hover:bg-primary/10 transition-all duration-300 backdrop-blur-sm hover:shadow-[0_0_15px_rgba(0,115,255,0.2)]"
                         style={{ fontFamily: 'Montserrat, sans-serif' }}
                       >
-                        Précédent
+                        {t("contactHome.previous")}
                       </button>
                     )}
                     <div className="flex-1" />
@@ -315,7 +317,7 @@ export function ContactHomeSection() {
                         className="px-8 py-3 bg-gradient-to-r from-primary to-cyan-400 text-white font-bold rounded-full hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[0_0_20px_rgba(0,115,255,0.3)] hover:shadow-[0_0_30px_rgba(0,115,255,0.5)]"
                         style={{ fontFamily: 'Montserrat, sans-serif' }}
                       >
-                        Suivant
+                        {t("contactHome.next")}
                         <ChevronRight className="w-5 h-5" />
                       </button>
                     ) : (
@@ -325,7 +327,7 @@ export function ContactHomeSection() {
                         className="px-8 py-3 bg-gradient-to-r from-primary to-cyan-400 text-white font-bold rounded-full hover:scale-105 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2 shadow-[0_0_20px_rgba(0,115,255,0.3)] hover:shadow-[0_0_30px_rgba(0,115,255,0.5)]"
                         style={{ fontFamily: 'Montserrat, sans-serif' }}
                       >
-                        Envoyer ma demande
+                        {t("contactHome.send")}
                         <ArrowRight className="w-5 h-5" />
                       </button>
                     )}
@@ -354,12 +356,12 @@ export function ContactHomeSection() {
                 fontFamily: 'Montserrat, sans-serif',
                 letterSpacing: '-0.02em',
               }}>
-                Prendre rendez-vous
+                {t("contactHome.appointmentTitle")}
               </h2>
               <p className="text-xl text-white/70 max-w-2xl mx-auto" style={{ 
                 fontFamily: 'Montserrat, sans-serif',
               }}>
-                Réservez un appel avec un expert Pixaura pour discuter de votre projet.
+                {t("contactHome.appointmentDescription")}
               </p>
             </div>
 
@@ -372,14 +374,14 @@ export function ContactHomeSection() {
               
               <div className="relative z-10 text-center py-12">
                 <p className="text-white/60 mb-8 text-lg" style={{ fontFamily: 'Montserrat, sans-serif' }}>
-                  Calendrier de rendez-vous
+                  {t("contactHome.calendarPlaceholder")}
                 </p>
                 <Link 
                   href="mailto:contact@pixaura.eu?subject=Demande de rendez-vous"
                   className="inline-flex items-center gap-2 px-8 py-4 bg-gradient-to-r from-primary to-cyan-400 text-white font-bold rounded-full hover:scale-105 transition-all duration-300 shadow-[0_0_20px_rgba(0,115,255,0.3)] hover:shadow-[0_0_30px_rgba(0,115,255,0.5)]"
                   style={{ fontFamily: 'Montserrat, sans-serif' }}
                 >
-                  Contacter pour un rendez-vous
+                  {t("contactHome.contactForAppointment")}
                   <ArrowRight className="w-5 h-5" />
                 </Link>
               </div>
