@@ -43,14 +43,14 @@ export default function AgencePage() {
 
   const teamMembers = [
     {
-      name: "Franck Ebouré",
+      name: "Franck Bourré",
       role: "CO-FONDATEUR & DIRECTEUR ADMINISTRATIF ET COMMERCIAL",
       image: "/Banque d_images/Copie de M7_03372.jpg",
       description: "Entrepreneur depuis 2005, expert en gestion de projets ambitieux et en développement stratégique.",
       vision: "Allier rigueur opérationnelle, stratégie long terme et compréhension fine des enjeux économiques.",
     },
     {
-      name: "Julien Oké",
+      name: "Julien Hochet",
       role: "CO-FONDATEUR & DIRECTEUR MARKETING ET COMMUNICATION",
       image: "/Banque d_images/Copie de M7_01248.jpg",
       description: "Ancien opérateur spécialisé des troupes parachutistes de l'armée de l'air, il incarne discipline, créativité et dépassement de soi.",

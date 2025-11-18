@@ -27,6 +27,7 @@ export default function Home() {
     // Check URL parameter directly (available immediately on client)
     const urlParams = new URLSearchParams(window.location.search)
     const skipIntroParam = urlParams.get('skipIntro')
+    const hash = window.location.hash.substring(1) // Remove the # symbol
     
     if (skipIntroParam === 'true') {
       // Skip intro immediately - before any paint happens
@@ -35,11 +36,12 @@ export default function Home() {
       // Remove the parameter from URL without reload
       urlParams.delete('skipIntro')
       const newUrl = urlParams.toString() 
-        ? `${window.location.pathname}?${urlParams.toString()}`
-        : window.location.pathname
+        ? `${window.location.pathname}?${urlParams.toString()}${hash ? `#${hash}` : ''}`
+        : `${window.location.pathname}${hash ? `#${hash}` : ''}`
       window.history.replaceState({}, '', newUrl)
       
-      // Scroll to top (Hero Section)
+      // Don't scroll here - let useEffect handle it after content renders
+      // Just ensure we're at top initially
       window.scrollTo({ top: 0, behavior: 'instant' })
     } else {
       // Always ensure page starts at top if not skipping intro
@@ -50,6 +52,32 @@ export default function Home() {
   const handleIntroComplete = useCallback(() => {
     setIntroComplete(true)
   }, [])
+
+  // Handle scroll to section after content is rendered
+  useEffect(() => {
+    if (introComplete) {
+      const hash = window.location.hash.substring(1)
+      if (hash) {
+        // Wait a bit for content to render, then scroll to section
+        const timer = setTimeout(() => {
+          const element = document.getElementById(hash)
+          if (element) {
+            // Calculate offset for navbar
+            const navbarHeight = 80
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset
+            const offsetPosition = elementPosition - navbarHeight
+            
+            window.scrollTo({
+              top: offsetPosition,
+              behavior: 'smooth'
+            })
+          }
+        }, 200)
+        
+        return () => clearTimeout(timer)
+      }
+    }
+  }, [introComplete])
 
   const contentTransition = useMemo(
     () =>

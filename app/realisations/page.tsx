@@ -230,28 +230,28 @@ export default function RealisationsPage() {
       return translatedProjects
     }
     
-    // Map translated filters back to original
+    // Map translated filters to translated values (since translatedProjects has translated values)
     const sectorMap: Record<string, string> = {
-      [t("realisationsPage.filterAutomobile")]: "Automobile",
-      [t("realisationsPage.filterRealEstate")]: "Immobilier",
-      [t("realisationsPage.filterSport")]: "Sport & Bien-être",
-      [t("realisationsPage.filterRestaurant")]: "Restauration",
-      [t("realisationsPage.filterArtists")]: "Artistes & Créateurs",
+      [t("realisationsPage.filterAutomobile")]: t("realisationsPage.filterAutomobile"),
+      [t("realisationsPage.filterRealEstate")]: t("realisationsPage.filterRealEstate"),
+      [t("realisationsPage.filterSport")]: t("realisationsPage.filterSport"),
+      [t("realisationsPage.filterRestaurant")]: t("realisationsPage.filterRestaurant"),
+      [t("realisationsPage.filterArtists")]: t("realisationsPage.filterArtists"),
     }
     const formatMap: Record<string, string> = {
-      [t("realisationsPage.filterBranding")]: "Branding",
+      [t("realisationsPage.filterBranding")]: t("portfolio.tagBranding"),
     }
     
     // Check if it's a format filter
-    const originalFormat = formatMap[activeFilter]
-    if (originalFormat && formatFilters.includes(originalFormat)) {
-      return translatedProjects.filter((project) => project.formats.includes(originalFormat))
+    const translatedFormat = formatMap[activeFilter]
+    if (translatedFormat) {
+      return translatedProjects.filter((project) => project.formats.includes(translatedFormat))
     }
     
     // Otherwise it's a sector filter
-    const originalSector = sectorMap[activeFilter]
-    if (originalSector) {
-      return translatedProjects.filter((project) => project.sector === originalSector)
+    const translatedSector = sectorMap[activeFilter]
+    if (translatedSector) {
+      return translatedProjects.filter((project) => project.sector === translatedSector)
     }
     
     return translatedProjects
@@ -264,24 +264,24 @@ export default function RealisationsPage() {
     // Count for "Tous"
     counts[t("realisationsPage.filterAll")] = translatedProjects.length
     
-    // Count for format filters
+    // Count for format filters - use translated format since translatedProjects has translated formats
     const formatMap: Record<string, string> = {
-      [t("realisationsPage.filterBranding")]: "Branding",
+      [t("realisationsPage.filterBranding")]: t("portfolio.tagBranding"),
     }
-    Object.entries(formatMap).forEach(([translated, original]) => {
-      counts[translated] = translatedProjects.filter((p) => p.formats.includes(original)).length
+    Object.entries(formatMap).forEach(([translatedFilter, translatedFormat]) => {
+      counts[translatedFilter] = translatedProjects.filter((p) => p.formats.includes(translatedFormat)).length
     })
     
-    // Count for sector filters
+    // Count for sector filters - use translated sectors since translatedProjects has translated sectors
     const sectorMap: Record<string, string> = {
-      [t("realisationsPage.filterAutomobile")]: "Automobile",
-      [t("realisationsPage.filterRealEstate")]: "Immobilier",
-      [t("realisationsPage.filterSport")]: "Sport & Bien-être",
-      [t("realisationsPage.filterRestaurant")]: "Restauration",
-      [t("realisationsPage.filterArtists")]: "Artistes & Créateurs",
+      [t("realisationsPage.filterAutomobile")]: t("realisationsPage.filterAutomobile"),
+      [t("realisationsPage.filterRealEstate")]: t("realisationsPage.filterRealEstate"),
+      [t("realisationsPage.filterSport")]: t("realisationsPage.filterSport"),
+      [t("realisationsPage.filterRestaurant")]: t("realisationsPage.filterRestaurant"),
+      [t("realisationsPage.filterArtists")]: t("realisationsPage.filterArtists"),
     }
-    Object.entries(sectorMap).forEach(([translated, original]) => {
-      counts[translated] = translatedProjects.filter((p) => p.sector === original).length
+    Object.entries(sectorMap).forEach(([translatedFilter, translatedSector]) => {
+      counts[translatedFilter] = translatedProjects.filter((p) => p.sector === translatedSector).length
     })
     
     return counts
@@ -626,7 +626,14 @@ export default function RealisationsPage() {
               
               {/* Premium Button */}
               <Link
-                href="/#contact"
+                href="/#rendez-vous"
+                onClick={(e) => {
+                  const currentPath = window.location.pathname
+                  if (currentPath !== "/") {
+                    e.preventDefault()
+                    window.location.href = `/?skipIntro=true#rendez-vous`
+                  }
+                }}
                 className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-br from-[#0073FF] via-[#0066E6] to-[#0052CC] px-12 py-5 text-sm font-bold uppercase tracking-[0.28em] text-white transition-all duration-300 hover:scale-105 hover:shadow-[0_12px_40px_rgba(0,115,255,0.5)] shadow-[0_8px_24px_rgba(0,115,255,0.4)] border border-white/20"
               >
                 <span className="absolute inset-0 rounded-full bg-gradient-to-r from-white/20 via-transparent to-white/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

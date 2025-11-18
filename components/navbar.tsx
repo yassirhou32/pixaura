@@ -78,40 +78,66 @@ export function Navbar() {
 
         <div className="relative hidden items-center gap-3 rounded-3xl border border-white/10 bg-black/20 px-5 py-1.5 text-white backdrop-blur-xl xl:flex">
           <div className="absolute inset-0 rounded-3xl border border-white/10 opacity-40" />
-          {navItems.map((item, index) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="group relative overflow-hidden rounded-xl px-5 py-2 text-sm font-bold text-white/95 transition-all duration-500"
-              style={{ animationDelay: `${index * 50}ms` }}
-              onMouseEnter={() => setHoveredItem(item.href)}
-              onMouseLeave={() => setHoveredItem(null)}
-            >
-              <div
-                className={`absolute inset-0 rounded-xl bg-primary/15 opacity-0 transition-opacity duration-500 ${
-                  hoveredItem === item.href ? "opacity-100" : "group-hover:opacity-70"
-                }`}
-              />
-              <div
-                className={`absolute bottom-1 left-1/2 h-[3px] w-0 -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent transition-all duration-500 ${
-                  hoveredItem === item.href ? "w-[calc(100%-1rem)] opacity-100" : "opacity-0"
-                }`}
-              />
-              <div
-                className={`absolute top-1 left-1/2 h-px w-0 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent transition-all duration-500 ${
-                  hoveredItem === item.href ? "w-[calc(100%-1rem)] opacity-100" : "opacity-0"
-                }`}
-              />
-              <span className="relative z-10 flex items-center gap-2">
-                <span
-                  className={`h-2 w-2 rounded-full bg-primary transition-all duration-500 ${
-                    hoveredItem === item.href ? "scale-150 opacity-100" : "scale-0 opacity-0"
+          {navItems.map((item, index) => {
+            // Check if link points to a section on home page (starts with /#)
+            const isHomeSection = item.href.startsWith("/#")
+            const sectionId = isHomeSection ? item.href.substring(2) : null
+            
+            const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+              if (isHomeSection && sectionId) {
+                e.preventDefault()
+                const currentPath = window.location.pathname
+                
+                if (currentPath === "/") {
+                  // Already on home page, just scroll to section
+                  const element = document.getElementById(sectionId)
+                  if (element) {
+                    element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                  }
+                } else {
+                  // Navigate to home page with skipIntro and scroll to section
+                  window.location.href = `/?skipIntro=true#${sectionId}`
+                }
+              }
+              // For other links (like /realisations, /humind), let Link handle it normally
+            }
+            
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={handleClick}
+                className="group relative overflow-hidden rounded-xl px-5 py-2 text-sm font-bold text-white/95 transition-all duration-500"
+                style={{ animationDelay: `${index * 50}ms` }}
+                onMouseEnter={() => setHoveredItem(item.href)}
+                onMouseLeave={() => setHoveredItem(null)}
+              >
+                <div
+                  className={`absolute inset-0 rounded-xl bg-primary/15 opacity-0 transition-opacity duration-500 ${
+                    hoveredItem === item.href ? "opacity-100" : "group-hover:opacity-70"
                   }`}
                 />
-                {item.label}
-              </span>
-            </Link>
-          ))}
+                <div
+                  className={`absolute bottom-1 left-1/2 h-[3px] w-0 -translate-x-1/2 rounded-full bg-gradient-to-r from-transparent via-primary to-transparent transition-all duration-500 ${
+                    hoveredItem === item.href ? "w-[calc(100%-1rem)] opacity-100" : "opacity-0"
+                  }`}
+                />
+                <div
+                  className={`absolute top-1 left-1/2 h-px w-0 -translate-x-1/2 bg-gradient-to-r from-transparent via-primary/60 to-transparent transition-all duration-500 ${
+                    hoveredItem === item.href ? "w-[calc(100%-1rem)] opacity-100" : "opacity-0"
+                  }`}
+                />
+                <span className="relative z-10 flex items-center gap-2">
+                  <span
+                    className={`h-2 w-2 rounded-full bg-primary transition-all duration-500 ${
+                      hoveredItem === item.href ? "scale-150 opacity-100" : "scale-0 opacity-0"
+                    }`}
+                  />
+                  {item.label}
+                </span>
+              </Link>
+            )
+          })}
         </div>
 
         <div className="hidden xl:flex items-center gap-4">
@@ -213,6 +239,13 @@ export function Navbar() {
 
           <Link
             href="/#rendez-vous"
+            onClick={(e) => {
+              const currentPath = window.location.pathname
+              if (currentPath !== "/") {
+                e.preventDefault()
+                window.location.href = `/?skipIntro=true#rendez-vous`
+              }
+            }}
             className="group relative inline-flex items-center justify-center gap-2.5 px-8 py-3.5 rounded-full overflow-hidden transition-all duration-500 hover:scale-[1.02] active:scale-[0.98]"
           >
             {/* Premium Glassmorphism Background */}
@@ -273,16 +306,44 @@ export function Navbar() {
         }`}
       >
         <div className="flex flex-col gap-4 px-6 py-6 text-white">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-2xl border border-white/10 bg-white/10 px-6 py-5 text-lg font-semibold transition-colors duration-300 hover:border-primary/60 hover:bg-primary/20"
-              onClick={() => setIsOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            // Check if link points to a section on home page (starts with /#)
+            const isHomeSection = item.href.startsWith("/#")
+            const sectionId = isHomeSection ? item.href.substring(2) : null
+            
+            const handleMobileClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+              setIsOpen(false)
+              if (isHomeSection && sectionId) {
+                e.preventDefault()
+                const currentPath = window.location.pathname
+                
+                if (currentPath === "/") {
+                  // Already on home page, just scroll to section
+                  setTimeout(() => {
+                    const element = document.getElementById(sectionId)
+                    if (element) {
+                      element.scrollIntoView({ behavior: 'smooth', block: 'start' })
+                    }
+                  }, 100)
+                } else {
+                  // Navigate to home page with skipIntro and scroll to section
+                  window.location.href = `/?skipIntro=true#${sectionId}`
+                }
+              }
+              // For other links (like /realisations, /humind), let Link handle it normally
+            }
+            
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                onClick={handleMobileClick}
+                className="rounded-2xl border border-white/10 bg-white/10 px-6 py-5 text-lg font-semibold transition-colors duration-300 hover:border-primary/60 hover:bg-primary/20"
+              >
+                {item.label}
+              </Link>
+            )
+          })}
 
           {/* Mobile Language Switcher - Ultra Premium Design */}
           <div className="relative flex items-center gap-2.5 rounded-2xl border border-white/20 bg-gradient-to-br from-white/10 via-white/5 to-white/10 p-1.5 backdrop-blur-xl">
@@ -341,7 +402,14 @@ export function Navbar() {
           <Link
             href="/#rendez-vous"
             className="group relative w-full flex items-center justify-between px-7 py-5 rounded-3xl overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] active:scale-[0.96] active:duration-150"
-            onClick={() => setIsOpen(false)}
+            onClick={(e) => {
+              setIsOpen(false)
+              const currentPath = window.location.pathname
+              if (currentPath !== "/") {
+                e.preventDefault()
+                window.location.href = `/?skipIntro=true#rendez-vous`
+              }
+            }}
             style={{
               background: 'linear-gradient(135deg, rgba(255,255,255,0.12) 0%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.12) 100%)',
               backdropFilter: 'blur(24px) saturate(180%)',
